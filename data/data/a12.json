@@ -1,0 +1,308 @@
+{
+    "title": "画面に表示される地図タイルの枚数",
+    "keyword": ["Web", "R", "統計", "地図"],
+    "tag": [""],
+    "category":"ctg2",
+    "summary":"パソコンやスマホの画面に表示される地図タイル枚数の期待値を調べてみました。",
+    "library":[""],
+    "article":"
+<h3>はじめに</h3>
+<p>
+Webで地図を見るときに多くの場合に使われているのが、Slippy Map Tilenamesというシステムです。
+これは、地図をあらかじめ、256px四方の正方形（タイル）に分割しておき、地図が表示される画面に合わせて必要なタイルだけ表示すればよい、という仕組みです。
+いちいち大きな地図をダウンロードする必要がないので、地図を軽快に見ることができます。
+</p>
+
+<p class='ref'>出典　
+<a href='https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames'>Slippy map tilenames</a><br>―OpenStreetMap
+</p>
+
+<h3>表示される地図タイルの枚数を知りたい</h3>
+<p>
+さて、このSlippy Map Tilenamesを用いたサイトを、パソコンやスマホで見るときに、どのくらいの枚数のタイルが1回に必要なのだろうか疑問に思い、調べてみました。
+もちろん画面の大きさによって変わりますが、それを数式化してみようという作業です。最終的に、表示される地図タイル枚数ごとの期待値を算出すればゴールです。
+</p>
+
+<div class='fig'>
+<a href='https://mghs15.github.io/map1/#10/43.065376/141.394730/&base=osm&ls=osm&disp=1&vs=c1j0h0k0l0u0t1z0r0s0f1' target="_blank"><img src='./a12/4.png' class='fig'></a>
+<p class='legend'>
+画面に表示されるタイルのみダウンロードされる。画面サイズが同じでも、表示範囲によって必要なタイル枚数が異なる（この例では、左は6枚、右は12枚）。図の赤線がタイル図郭、番号はタイル座標。
+背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>。
+本記事執筆者が試作した<a href='https://mghs15.github.io/map1/' target='_blank'>地図サイト</a>を用いた。
+</p></div>
+
+<p>
+画面は長方形、タイルの境界は画面の縦横に平行としましょう。（回転させたりできるWebサイトもありますが、難しくなるので無視！）
+そうすると、表示される地図タイル枚数＝縦に表示できるタイル数×横に表示できるタイル数、となります。
+</p><p>
+タイルは正方形ですから、縦も横も変わりません。よって、画面の1辺だけを考えて、その長さをL<sub>0</sub> pxとしましょう。また、タイルの1辺の長さをT（=256 px）と置きます。
+</p><p>
+単純に考えれば、L<sub>0</sub>÷Tが表示できるタイル数となりますね。しかし、タイルは実際には1枚単位でダウンロードするので、必ず整数になります。
+
+</p><p>
+L<sub>0</sub> pxを埋めるのに必要なタイルの最小数は、L<sub>0</sub>をTで割って、その商（整数部分をQとします）を切り上げたものになります。
+タイルをQ枚並べて、まだ残っているL<sub>0</sub> ‐ Q×Tに対しては、タイルを1枚使わないといけないからです。
+</p><p>
+
+また、表示できる最大のタイル数は最小数に1を加えたものになります。上述のL<sub>0</sub>‐Q×Tの部分を埋めるのに、1枚のタイルを利用するのではなく、両端から2枚のタイルを利用すればよいからです。
+（最初に示した図を見ていただければと思います。左は、縦、横ともにL<sub>0</sub>‐Q×Tの部分を埋めるのに、1枚のタイルを利用した例、右は、L<sub>0</sub>‐Q×Tの部分を埋めるのに、2枚のタイルを利用した例となります。）
+</p><p>
+というわけで、ダウンロードされるタイルの枚数は、Q+1かQ+2のどちらかとなるわけです。これで、ランダムにある場所を地図表示した際に、Q+1かQ+2のどちらとなるかの確率を考えればよいことになります。
+
+</p><p>
+LをL<sub>0</sub>/2をTで割った余りと考えましょう。すると、下の図のように、Lがタイルサイズの半分（T/2）より小さいか大きいかによって、表示されるタイル数が、多いか少ないかのパターンが変化することがわかります。
+（このパターンに行きつくまで、定規でひたすら線を引いて考えていました。スマートに行き着く思考方法はよくわかりません…。）
+このパターンに従って場合分けをすれば、タイルの枚数がQ+1かQ+2のどちらかになるか確率を求められます。QはL<sub>0</sub>とTから求められるので、Lを用いて求める必要はありません。
+</p><p>
+タイルのどの位置に、図の両矢印の中心が存在するのか、ということを考えます。この位置は、一様分布とします。すると、幾何学的にとりうる領域の比が、確率となります。
+</p><p>
+L≦T/2のとき、		<br>
+Q+1になる確率=T-2L	<br>
+Q+2になる確率=2L	<br>
+	<br>
+L＞T/2のとき、		<br>
+Q+1になる確率=2T-2L	<br>
+Q+2になる確率=2L-T	<br>
+	<br>
+となりました。
+</p>
+
+
+<div class='fig'>
+<a href='./a12/1.png'><img src='./a12/1.png' class='fig'></a>
+<p class='legend'>
+Lがタイルサイズの半分（T/2）より小さいか大きいかによって、表示されるタイル数が多いか少ないかのパターンが変化する。丸（●）は両矢印の中心で、これがタイルのどの位置に存在するかで確率を計算する。
+</p></div>
+
+<h3>計算してみる</h3>
+<p>
+iPhoneのサイズが、375px×667pxということなので、これを例にします。
+横は、375÷256＝1.464…なので2枚か3枚、
+縦は、375÷256＝2.605…なので3枚か4枚が表示されます。<br>
+この画面で世界中を表示してみて、何枚のタイルが読み込まれるのか計算してみるわけです。
+</p><p>
+手計算しようと思ったのですが、センター試験で確率（場合の数）に苦しんだ思い出がフラッシュバックしてきたのでやめました。
+代わりにプログラムで必要なタイル数の確率を計算すると、<br>
+6枚は、0.2111359 	<br>
+8枚は、0.3240204 	<br>
+9枚は、0.1833954 	<br>
+12枚は、0.2814484	<br> 
+となりました。
+</p><p>
+言語は、Rを使いました。何度も確率値がマイナスになってデバッグしましたが、もっともらしい値になって間違いに気付かない方よりは良かったかなと思っています。
+（そんな難しい問題ではないのに、やたら時間がかかってしまい、無力さを痛感します。）
+</p><p>
+
+<div class='codearea'><pre><code>
+L1_input &lt- 375 #Horizontal	<br> 
+L2_input &lt- 667 #Vertical 	<br> 
+T &lt- 256 # fixed tile size	<br> 
+	<br> 
+L1.min &lt- ceiling(L1_input/T)	<br> 
+L1.max &lt- ceiling(L1_input/T) + 1	<br> 
+L2.min &lt- ceiling(L2_input/T)	<br> 
+L2.max &lt- ceiling(L2_input/T) + 1	<br> 
+	<br> 
+L1 &lt- L1_input/2 - T*(ceiling(L1_input/(T*2)) - 1) # Half of Window	<br> 
+L2 &lt- L2_input/2 - T*(ceiling(L2_input/(T*2)) - 1) # Half of Window	<br> 
+	<br> 
+if (L1 >= T/2){	<br> 
+p.L1.min &lt- (2*T - 2*L1)/T	<br> 
+p.L1.max &lt- (2*L1 - T)/T	<br> 
+}else if(L1 < T/2){	<br> 
+p.L1.min &lt- (T - 2*L1)/T	<br> 
+p.L1.max &lt- (2*L1)/T	<br> 
+}	<br> 
+	<br> 
+if (L2 >= T/2){	<br> 
+p.L2.min &lt- (2*T - 2*L2)/T	<br> 
+p.L2.max &lt- (2*L2 - T)/T	<br> 
+}else if(L2 < T/2){	<br> 
+p.L2.min &lt- (T - 2*L2)/T	<br> 
+p.L2.max &lt- (2*L2)/T	<br> 
+}	<br> 
+	<br> 
+# results table	<br> 
+row1 &lt-c(p.L1.min, p.L1.max)*p.L2.min	<br> 
+row2 &lt-c(p.L1.min, p.L1.max)*p.L2.max	<br> 
+res &lt- rbind(row1, row2)	<br> 
+colnames(res) &lt- as.character(c(L1.min, L1.max))	<br> 
+rownames(res) &lt- as.character(c(L2.min, L2.max))	<br> 
+res #表形式で出力	<br> 
+	<br> 
+# results summary	<br> 
+res2 &lt- c(row1, row2)	<br> 
+fc_num &lt- c(c(L1.min, L1.max)*L2.min, c(L1.min, L1.max)*L2.max)	<br> 
+fc &lt- factor(fc_num)	<br> 
+res_e &lt- tapply(res2, fc, sum)	<br> 
+res_e #集計して出力	<br> 
+	<br> 
+apNum &lt- sum(res_e*fc_num)	<br> 
+apNum # estimated number of tiles on the window タイルの表示枚数の期待値	<br> 
+	<br> 
+# check the sum of probability（確率の合計値。検算用）	<br> 
+sum(p.L1.min, p.L1.max, p.L2.min, p.L2.max)	<br> 
+sum(row1, row2)
+</code></pre></div>
+
+</p><p>
+ちなみに、期待値は、9.027542となります。<br>
+単純に、(375÷256)×(667÷256)＝1.464×2.605＝3.814としたのでは、大きな解離があります。
+</p>
+
+
+<h3>検算</h3>
+<p>
+合っているか不安なので、検算をしてみましょう。上記の画面サイズで、世界中のいろんな場所（北緯80度～南緯80度）をズームレベル16で10000回表示してみると、結果は<br>
+6枚は、2075回 	<br>
+8枚は、3176回 	<br>
+9枚は、1868回 	<br>
+12枚は、2881回	<br> 
+となりました。
+</p>
+
+
+<div class='fig'>
+<a href='./a12/2.png'><img src='./a12/2.png' class='fig'></a>
+<p class='legend'>
+表示タイル数の出現回数を示したヒストグラム
+</p></div>
+
+<p>
+もちろんプログラムで乱数を使っています。（実際のスマホでちょっと試しましたが、6回くらいやってあきらめました。）
+</p>
+
+<div class='codearea'><pre><code>
+set.seed(1)	<br> 
+n &lt- 10000	<br> 
+
+# 一様分布に従う乱数で、適当な経緯度を生成 <br>
+x1 &lt- runif(n, -180, 180)	<br> 
+y1 &lt- runif(n, -80, 80)	<br> 
+z1 &lt- 16	<br> 
+
+# 経緯度をタイル座標に変換（小数点を丸めない） <br>
+tX &lt- ((2^(z1-1))+(x1/180)*(2^(z1-1)))	<br> 
+tY &lt- (((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(y1*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(z1-1)))	<br> 
+tX1 &lt- tX + L1_input/T/2; 	<br> 
+tY1 &lt- tY + L2_input/T/2; 	<br> 
+tX2 &lt- tX - L1_input/T/2; 	<br> 
+tY2 &lt- tY - L2_input/T/2	<br> 
+# print(c(tX1, tX2, tY1, tY2))	<br> 
+tX1 &lt- floor(tX1); tY1 &lt- floor(tY1); tX2 &lt- floor(tX2); tY2 &lt- floor(tY2)	<br> 
+# print(c(tX1, tX2, tY1, tY2))	<br> 
+X_L &lt- tX1 - tX2 + 1	<br> 
+Y_L &lt- tY1 - tY2 + 1	<br> 
+kensyo &lt- X_L*Y_L 	<br> 
+hist(kensyo)	<br> 
+fc_ken &lt- factor(kensyo)	<br> 
+kensyo_e &lt- tapply(kensyo, fc_ken, length)	<br> 
+kensyo_e #結果を表示
+</code></pre></div>
+
+<p>
+この回数は、理論的な計算で求めた結果（期待値）通りでしょうか？
+</p><p>
+カイ二乗検定で理論的な計算で求めた期待値にそっているかどうか検定可能です。
+帰無仮説を「理論的な計算で求めた期待値通りである」、対立仮説を「理論的な計算で求めた期待値通りではない」とします。
+検定はRの本領発揮で、2行でできます。
+
+<div class='codearea'><pre><code>
+# test of goodness of fit (chi-squared test)	<br> 
+chi &lt- chisq.test(x=kensyo_e, p=res_e)	<br> 
+chi$p.value
+</code></pre></div>
+
+今回はp=0.25でしたので、帰無仮説を保留します。つまり、「期待値通りではない」とはいえないということなので、計算結果は、シュミレーション結果とは齟齬がないようです。
+（ここの理論については、補足を参照）
+
+<h3>補足</h3>
+<p>
+統計的検定において、仮説には非対称性があります。
+つまり、一定の危険率（一般的には0.05）以下のp値であれば、帰無仮説を棄却し、対立仮説を採択します。一方で、p値が危険率を超えた場合、帰無仮説の判断は保留され、「何とも言えない」という結論になります。
+今回のカイ二乗検定でも、帰無仮説を保留したので、結論は何も言えないのです。
+</p><p>
+しかし、今回私がしたように、期待値にそっているかどうか検定する場合（test of goodness of fit）、帰無仮説の留保を「期待値通り」と解釈することがあるようです。
+このように、帰無仮説を保留することで、帰無仮説通りであるとする解釈は、正規性を検定するコルモゴロフ・スミルノフ検定でも使われることがあると聞きます。
+</p>
+
+<p class='ref'>
+<a href='https://qiita.com/goodclues/items/0c91f6ac6df6a081fe86#%E6%9C%AC%E8%A8%98%E4%BA%8B%E3%81%AE%E5%86%85%E5%AE%B9'>K-S検定（コルモゴロフ-スミルノフ検定）と、その誤用について</a><br>―@goodclues
+</p>
+
+<p>
+p値や検定解釈に関する誤用は根強く、一般的に使われるアイデアでも、誤用である可能性も多いです。私は未熟でなかなか判断が付きませんが、上記のような検定の使い方について、誤用である可能性も念頭に置いた方がよさそうです。
+</p><p>
+なお、p値は、しばしば、「その仮説が真である確率を示す」と解釈されることがありますが、これは誤りです。
+正しくは、「ある仮説のもとで、実際に得られたような極端なデータが得られる確率」となります。
+これに関する詳しい忘備録は<a href='./a14.html'>後で整理しよう</a>かと思いますが、今回、上記の乱数を用いたシュミレーションを10000回繰り返して、それぞれの回でカイ二乗検定を適用してみました。
+</p><p>
+p値が0.05を下回った割合は、「0.0488」となりました。
+まさに、『p値とは、「理論的な計算で求めた期待値通りである」という仮説のもとで、実際に得られたような（理論的な計算で求めた期待値からずれたような）極端なデータが得られる確率』という解釈が合致する結果となりました。
+</p><p>
+また、これは、たとえ仮説が間違っていなくとも、何度も実験と検定を行えば、危険率くらいの割合で有意になるという（ある意味、当たり前の）内容を示す結果ともなっています。
+</p>
+
+<div class='fig'>
+<a href='./a12/3.png'><img src='./a12/3.png' class='fig'></a>
+<p class='legend'>
+10000回のカイ二乗検定で得られたp値。危険率0.05(青線)以下のp値が得られた点を赤で示した。赤線は危険率0.01を示す。
+</p></div>
+
+<p>
+10000回のカイ二乗検定を行うプログラムはこちら。結構時間がかかりますが、ヒストグラムを毎回出力するようにしていますので、ヒストグラムが毎回微妙に変わる様子を楽しみながら待っていただけたらと思います。
+</p>
+
+
+<div class='codearea'><pre><code>
+#Kensyo	<br> 
+i &lt- 1	<br> 
+D &lt- NULL	<br> 
+E &lt- NULL	<br> 
+rep &lt- 10000	<br> 
+while(i < rep){	<br> 
+set.seed(i)	<br> 
+n &lt- 10000	<br> 
+
+# 一様分布に従う乱数で、適当な経緯度を生成<br>
+x1 &lt- runif(n, -180, 180)	<br> 
+y1 &lt- runif(n, -80, 80)	<br> 
+z1 &lt- 16	<br> 
+
+# 経緯度をタイル座標に変換（小数点を丸めない）<br>
+tX &lt- ((2^(z1-1))+(x1/180)*(2^(z1-1)))	<br> 
+tY &lt- (((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(y1*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(z1-1)))	<br> 
+tX1 &lt- tX + L1_input/T/2; 	<br> 
+tY1 &lt- tY + L2_input/T/2; 	<br> 
+tX2 &lt- tX - L1_input/T/2; 	<br> 
+tY2 &lt- tY - L2_input/T/2	<br> 
+# print(c(tX1, tX2, tY1, tY2))	<br> 
+tX1 &lt- floor(tX1); tY1 &lt- floor(tY1); tX2 &lt- floor(tX2); tY2 &lt- floor(tY2)	<br> 
+# print(c(tX1, tX2, tY1, tY2))	<br> 
+X_L &lt- tX1 - tX2 + 1	<br> 
+Y_L &lt- tY1 - tY2 + 1	<br> 
+kensyo &lt- X_L*Y_L 	<br> 
+hist(kensyo)	<br> 
+fc_ken &lt- factor(kensyo)	<br> 
+kensyo_e &lt- tapply(kensyo, fc_ken, length)	<br> 
+D &lt- rbind(D, kensyo_e)	<br> 
+	<br> 
+# test of goodness of fit (chi-squared test)	<br> 
+chi &lt- chisq.test(x=kensyo_e, p=res_e)	<br> 
+E &lt- c(E, chi$p.value)	<br> 
+	<br> 
+i &lt- i+1	<br> 
+}	<br> 
+	<br> 
+apply(D, 2, mean)/n	<br> 
+	<br> 
+col &lt- ifelse(E <= 0.05, "red", "black")	<br> 
+plot(E, col=col, ylab="p-value")	<br> 
+abline(h=0.05, col="blue")	<br> 
+abline(h=0.01, col="red")	<br> 
+length(subset(E, E < 0.05))/rep
+</code></pre></div>
+</p>
+    ",
+    "history":["2019年2月16日公開"]
+}

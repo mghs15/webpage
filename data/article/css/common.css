@@ -1,0 +1,171 @@
+﻿/*
+いろんなとこからコピペしまくったため、ぐちゃぐちゃです
+*/
+
+/*ホームページ全体*/
+body {
+	padding: 0 2.5%; 
+	height: 97.5%; 
+	width: 95%;
+	background-color: #FFFFFF;
+	color: #000000;
+	line-height: 200%;
+	overflow: scroll;
+}
+
+/*タイトル*/
+h1{
+	padding: 1em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	background: #fffaf4;/*背景色*/
+	border-left: solid 5px #ffaf58;/*左線（実線 太さ 色）*/
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+}
+
+
+/***********************************/
+/*記事一覧*/
+h2.ctg{
+	padding: 0.5em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	background: #fffaf4;/*背景色*/
+	/*background: #dce3ba; 背景色 うぐいす*/
+	border-left: solid 5px #ffaf58;/*左線（実線 太さ 色）*/
+	/*border-left: solid 5px #7967C3; 左線（実線 太さ 色）紫*/
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+}
+
+ul.ichiran{
+	padding-left: 0px
+}
+
+ul.ichiran li{
+	background: #FCE4BA;
+	border: 1px solid #eeeeee;
+	border-radius: 0.4em;/*角の丸み*/
+	margin:10px 0;
+	padding: 15px 15px 0 15px;
+	list-style-type: none;
+	line-height: 100%;
+}
+
+ul.ichiran p{
+	line-height: 100%;
+}
+
+/***********************************/
+/*パンくずリスト*/
+.breadcrumbs {
+  margin:0;
+  padding:0;
+  line-height: 120%; 
+}
+
+.breadcrumbs li{
+  display:inline;/*横に並ぶように*/
+  list-style: none;
+
+}
+
+.breadcrumbs li:after{/* >を表示*/
+  content: '>';
+  padding: 0 3px;
+  color: #555;
+}
+
+.breadcrumbs li:last-child:after{
+  content: '';
+}
+
+.breadcrumbs li a {
+    text-decoration: none;
+    color: #ff6600;/*色*/
+}
+
+.breadcrumbs li a:hover {
+    text-decoration: underline;
+}
+
+
+/*タイトル*/
+h2.article{
+	padding: 0.5em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	background: #fffaf4;/*背景色*/
+	/*background: #dce3ba; 背景色 うぐいす*/
+	border-left: solid 5px #ffaf58;/*左線（実線 太さ 色）*/
+	/*border-left: solid 5px #7967C3; 左線（実線 太さ 色）紫*/
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+	font-size: 120%; 
+}
+
+/*キーワード全体*/
+div.keyarea{
+}
+
+/*個々のキーワード*/
+a.keyword{
+	background: #FCE4BA;
+	/*background: #D5CFEC; 紫*/
+	padding: 2px;
+	text-align: center;
+	/*box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);*/
+	border: 1px solid #eeeeee;
+	border-radius: 0.3em;/*角の丸み*/
+}
+
+/*本文全体*/
+div.article{
+	line-height: 140%;
+	padding: 5px;
+}
+
+/*履歴全体*/
+div.history{
+	line-height: 100%;
+	padding: 0 5px;
+	font-size: 95%; 
+}
+
+/*コード部分*/
+div.codearea{
+	line-height: 120%;
+	background: #eeeeee;
+	color: #000000;
+	margin: 10px;
+	padding: 2px 10px;
+	border-radius: 0.3em;/*角の丸み*/
+	overflow: auto;
+}
+
+/*図表部分全体*/
+div.fig{
+	background: #ffffff;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+	font-size: 95%; 
+	margin:15px;
+	padding: 5px 15px;
+	border-radius: 0.3em;/*角の丸み*/
+	overflow: auto;
+}
+
+/*図表の説明部分*/
+p.legend{
+	
+}
+
+/*図表*/
+img.fig{
+}
+
+
+/*注意事項*/
+div.attention{
+	background: #ffffff;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.23);
+	font-size: 95%; 
+	line-height: 130%;
+	margin: 15px 0px;
+	padding: 1px 10px;
+	border-radius: 0.3em;/*角の丸み*/
+}

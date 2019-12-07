@@ -1,0 +1,65 @@
+#install.packages("rjson")
+library("rjson")
+
+file <- "a2"
+jsonf <- paste(file, "json", sep=".")
+htmlf <- paste(file, "html", sep=".")
+
+data <- fromJSON(paste(readLines("a2.json", encoding="UTF-8"), collapse=""))
+
+title <- data[["title"]]
+keyword_n <- data[["keyword"]] 
+tag_n <- data[["tag"]]
+article <- data[["article"]]
+history_n <- data[["history"]]
+
+i <- 1
+D <- NULL
+while(i <= length(keyword_n)){
+	D <- paste(D, keyword_n[i], sep=" ")
+	i <- i + 1
+}
+keyword <- D
+#
+i <- 1
+D <- NULL
+while(i <= length(tag_n)){
+	D <- paste(D, tag_n[i], sep=" ")
+	i <- i + 1
+}
+tag <- D
+#
+i <- 1
+D <- NULL
+while(i <= length(history_n)){
+	D <- paste(D, history_n[i], "<br>", sep=" ")
+	i <- i + 1
+}
+history <- D
+
+#HTML
+html_head <- "<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<title>
+gh-pagesでHPを公開する試み
+</title>
+<style>
+body {padding: 2.5%; height: 95%; width: 90%;}
+</style>
+</head>
+<body><p><a href='https://mghs15.github.io/webpage/'>gh-pagesでHPを公開する試み</a></p>
+<div = title><h2>
+"
+# before title
+html_key <- "</h2></div> <div class='keyword'><p>"  # before keyword
+html_art <- "</p></div> <div class='article'>" # before article
+html_his <- "</div> <div class='history'><p>" # before history
+html_tale <- "</p></div></body></html>" # end
+
+html <- paste(html_head, title, html_key, keyword, html_art, article, html_his, history, html_tale)
+write.table(html, htmlf, fileEncoding="UTF-8", col.name=FALSE, row.names=FALSE, quote=FALSE, sep="\n")
+
+

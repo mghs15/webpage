@@ -1,0 +1,155 @@
+{
+    "title": "海しかない地形図",
+    "keyword": ["地図"],
+    "tag": [""],
+    "category":"ctg1",
+    "summary":"陸地がほとんどない2万5千分の1地形図をピックアップしました。",
+    "library":[""],
+    "library":[""],
+    "article":"
+<p>
+注意：試験公開です。中身は今後適宜修正します。
+</p>
+<h3 id='motv'>動機</h3>
+<p>
+ふと、無駄遣いしたくなって、なるべく情報量が少ない地図を買おうと思い立ちました。<br>
+国土地理院発行の2万5千分の1地形図は、陸地については国の基本図として詳細に地形・地物が描かれていますが、
+海の部分については、行政界や航路、注記（地名など）の一部が描かれるのみで、基本的に水色一色です。
+これは、国土地理院の役割が、「土地の測量」と決められており、海（水路）の測量は、海上保安庁海洋情報部が行うようにと役割分担をしているためでしょう。
+というわけで、なるべく情報量が少ない地図として、「海の部分が多い2万5千分の1地形図」を探し求めることにしました。
+</p>
+<p>
+普通は、ひとつの地図にするのに情報が少ない地域については、ひとつの地図にまとめてしまったり、別の情報を加えたり、場合によっては省略したりします。そして、結局、1枚の地図に含まれる情報量はある程度一定以上になるものです。
+しかし、全国を一定の図郭でカバーすることにも意義のある2万5千分の1地形図では、多少情報量が少なくても、1枚の地図となることも多いように思います。
+もちろん、いくつかの離島を1枚の地図にまとめたり、図郭から少しはみ出した部分を、空いている個所に挿入するという手段も取られ、
+ひとつの地図に小さな島が一つだけ、または半島の先っちょがちょっとだけしか載っていない、なんて地図は非常に少ないです。
+それでも、日本全体で4,420面ある2万5千分の1地形図です。どこかに、どうしてもほんの少しの陸地を1枚の地図に独立して記載せざるを得ない場合があるかもしれません。
+海だらけの地図を探す試みを始めました。
+</p>
+<h3 id='method'>調査方法</h3>
+<p>
+手段は単純で、以下のサイトを用いて、目視でめぼしい地域を探していくのです。<br></p>
+<p class='ref'>
+<a href='https://maps.gsi.go.jp/#11/35.485554/139.841194/&base=std&ls=std&disp=1&lcd=std&vs=c0j0h0k0l0u0t0z1r0s0f0' target='_blank'>地理院地図（2万5千分の1地形図図郭を表示）</a>
+</p><p class='ref'>
+<a href='http://mapps.gsi.go.jp/history.html' target='_blank'>地図空中写真閲覧サービス</a>
+</p><p>
+最初は、GISデータ（たとえば、<a href='http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v2_3.html'  target='_blank'>国土数値情報の市町村別ポリゴンデータ</a>など）を使って、きちんと数値で裏を取れる形でやろうとしましたが、とてつもなく処理が重くなりそうだったため諦めました。
+パソコンと自分どちらに負荷をかけるかという話ですね。また、最終的に、陸地以外にも、いろいろな地物・注記がのって、情報量が変わってくるので、最終的な判断は非常に難しく、やはり自分の感覚次第になってしまいます。
+</p>
+
+<p style="color:red;">
+※以下、地図空中写真閲覧サービスの地図へのリンクを用意しておりますが、最初はサイトの同意画面に遷移してしまいます。
+同意して閲覧する場合、同意後に再度、リンクを開いてください。
+</p>
+
+<h3 id='result'>調査結果</h3>
+<p>
+さて、上記の地理院地図を使って、家で夜な夜な全国をなめるように見ていくのですが、海の多少について、以下のように少し傾向がつかめてきました。
+（ちょっと整理が足りていないので、あとで修正すると思います。）
+<ol>
+	<li>島が単独で存在する場合（例：<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1552475&isDetail=false'  target='_blank'>南鳥島</a>）は、他の地図の空いたところに入れられてしまうことが多い。</li>
+	<li>島が複数、広がりをもって存在する場合、1枚の地図として採用されることが多い。海の面積は大きくなるが、地図の中に島が散らばるため、うるさくなる。</li>
+	<li>沖縄付近になると、島の面積自体は小さいが、サンゴ礁が描かれるようになり、情報量が多くなってしまう。
+	（例：<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1333882&isDetail=false'  target='_blank'>フデ岩</a>）</li>
+	<li>半島の先がはみ出す程度では、その半島がメインで含まれる地図の中で、分図としたり、図郭線からはみ出させたりして、処理する傾向になる。つまり、はみ出て独立の地図になったとしても、必然的に上記の島々の総面積よりも土地の面積は大きくなりがち。</li>
+	<li>左右上下の隅に海岸線が広がる（例：<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1637334&isDetail=false'  target='_blank'>大名鹿（おおなしし）</a>）という地図は、大部分が海でも採用されやすい。
+	土地の面積は大きいが、小さな島が地図中に散らばるよりも一面に水色が広がる感があり、すっきりしていて好きだ。</li>
+</ol>
+</p>
+<p>
+というわけで、以上の傾向も踏まえて、個人的に見つけた「海の部分が多い2万5千分の1地形図　四天王」を選んでみました。<br>
+※もちろん、これら以外にももっと海の多い部分があるかもしれません。あくまで自分が調査した範囲で、感覚的に選んだものです。
+</p>
+
+
+<h4>百貫島（ひゃっかんじま）</h4>
+<p>半島の先端と島（百貫島）が一つ含まれている。情報が地図の左上４分の1にまとまっており、コンパクト感もあり好評価。</p>
+<div class='fig'>
+<a href='./a4/1.png'><img src='./a4/1.png' alt ='百貫島（ひゃっかんじま）の地図' class='fig'></a><br>
+<p class='legend'>
+百貫島（ひゃっかんじま）の図郭<br>※背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>、右下の広域図は<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>、図郭は<a href='https://maps.gsi.go.jp' target='_blank'>地理院地図</a>より<br>
+<ul><li>　<a href='https://maps.gsi.go.jp/#12/34.284453/133.318577/&base=std&ls=std&disp=1&lcd=std&vs=c0j0h0k0l0u0t0z1r0s0f0' target='_blank'>地理院地図で確認</a><br>
+</li><li>　<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1325589&isDetail=false' target='_blank'>地図空中写真閲覧サービスで確認</a>
+</li></ul></p></div>
+
+<h4>大立島（おおたてしま）</h4>
+<p>個人的な本命。目視確認する上では、地図に占める陸の面積は最も小さいのではないかと思っている（サンゴ礁に囲まれた島々は確認していないので除く）。
+島の散らばり方も最小限に抑えられている印象。</p>
+<div class='fig'>
+<a href='./a4/2.png'><img src='./a4/2.png' alt ='大立島（おおたてしま）の地図' class='fig'></a><br>
+<p class='legend'>
+大立島（おおたてしま）の図郭<br>※背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>、右下の広域図は<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>、図郭は<a href='https://maps.gsi.go.jp' target='_blank'>地理院地図</a>より<br>
+<ul><li>　<a href='https://maps.gsi.go.jp/#12/33.047810/129.435253/&base=std&ls=std&disp=1&lcd=std&vs=c0j0h0k0l0u0t0z1r0s0f0' target='_blank'>地理院地図で確認</a><br>
+</li><li>　<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1332891&isDetail=false' target='_blank'>地図空中写真閲覧サービスで確認</a>
+</li></ul></p></div>
+
+<h4>ハルカリモシリ島（はるかりもしりとう）</h4>
+<p>国土地理院は北方領土の地図もしっかり作っている。この地図でも情報が地図の左上４分の1にまとまっており、コンパクト感がある。
+しかし、北方領土については、隣接する図郭を重複させていないので、情報が少ない地図が作られやすいと言うこともあり、上記2地図よりも評価を低くしてある。</p>
+<div class='fig'>
+<a href='./a4/3.png'><img src='./a4/3.png' alt ='ハルカリモシリ島（はるかりもしりとう）' class='fig'></a><br>
+<p class='legend'>
+ハルカリモシリ島（はるかりもしりとう）の図郭<br>※背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>、右下の広域図は<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>、図郭は<a href='https://maps.gsi.go.jp' target='_blank'>地理院地図</a>より<br>
+<ul><li>　<a href='https://maps.gsi.go.jp/#12/43.404798/146.218929/&base=std&ls=std&disp=1&lcd=std&vs=c0j0h0k0l0u0t0z1r0s0f0' target='_blank'>地理院地図で確認</a><br>
+</li><li>　<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1298041&isDetail=false' target='_blank'>地図空中写真閲覧サービスで確認</a>
+</li></ul></p></div>
+
+<h4>歯舞海馬島（はぼまいとどじま）</h4>
+<p>こちらも北方領土の島々。ハルカリモシリ島の地図に比べて、島々の面積は小さいが、その分数が多くて散らばっている印象。</p>
+<div class='fig'>
+<a href='./a4/4.png'><img src='./a4/4.png' alt ='歯舞海馬島（はぼまいとどじま）' class='fig'></a><br>
+<p class='legend'>
+歯舞海馬島（はぼまいとどじま）の図郭<br>※背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>、右下の広域図は<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>、図郭は<a href='https://maps.gsi.go.jp' target='_blank'>地理院地図</a>より<br>
+<ul><li>　<a href='https://maps.gsi.go.jp/#12/43.561486/146.424923/&base=std&ls=std&disp=1&lcd=std&vs=c0j0h0k0l0u0t0z1r0s0f0' target='_blank'>地理院地図で確認</a><br>
+</li><li>　<a href='http://mapps.gsi.go.jp/contentsImageDisplay.do?specificationId=1298038&isDetail=false' target='_blank'>地図空中写真閲覧サービスで確認</a>
+</li></ul></p></div>
+
+<h3 id='kounyu'>購入</h3>
+<p>というわけで、個人的「海の部分が多い2万5千分の1地形図　四天王」をピックアップできたところで、自分が一番気に入った大立島を購入してみました。
+少し前の3色刷りの地図なので350円でした。効率的に無駄遣いをするために、だいぶ時間を使ってしまいました。</p>
+
+<div class='fig'>
+<a href='./a4/5.png'><img src='./a4/5.png' alt ='大立島の地図を購入して飾った様子' width=300 class='fig'></a><br>
+<p class='legend'>
+大立島の地図を購入して部屋に飾ってみました。ほとんど水色のシートです。水色のインテリアにはリラックス効果があると聞きます。<br>
+</p></div>
+
+<p>
+今回は紙地図に絞っていますが、2万5千分の1地形図（に相当する情報）は、電子データとしてオンラインでも購入できます。</p>
+<p class='ref'>
+<a href='http://net.jmc.or.jp/digital_data_gsiol_denshiChizu25000.html' target='_blank'>電子地形図25000オンライン（日本地図センター）</a><br>
+</p><p>
+こちらの場合、好きな範囲を切り取って購入できるため、いくらでも情報量が少ないものを購入することはできるのでしょうが、すこし張り合いがない気もします。
+</p>
+
+<h3>補足</h3>
+<p>
+ちなみに、今回4つの図郭の説明に地理院地図の標準地図ではなくOpenStreetMapを使っています。これは、標準地図が測量法の適用を受け、Webページ等で公開するのに制限があるためです。
+OpenStreetMapのライセンスは<a href='https://www.openstreetmap.org/copyright' target='_blank'>こちら</a>をご覧ください。<br>
+測量法の適用を受ける地図（基本測量成果）ですが、Webページなどの「刊行物等に少量の地図を挿入」する場合には、以下の条件で、出典の明示のみで利用可能となっています。
+<br>
+<blockquote cite='http://www.gsi.go.jp/LAW/2930-qa.html#02'>
+【Webサイト等】 <br>
+<ul><li>
+300かける400ピクセル以下の大きさで地図等の一部（ラスタ形式）を掲載する場合
+</li><li>
+300かける400ピクセルを超え、画面に収まる大きさで地図等の一部（ラスタ形式）を掲載する場合は、Webサイト全体の中で5枚まで
+</li></ul>
+スクロール機能により画面以上の地図が見られるような場合は1枚でも申請を要します。<br>
+―<a href='http://www.gsi.go.jp/LAW/2930-qa.html#02' target='_blank'>国土地理院の地図の利用手続（測量成果の複製・使用申請）に関するよくある質問と回答</a>
+</blockquote>
+
+しかし、挿入するときにはサイズの大きさを定めればいいのですが、元の画像の大きさまで厳密に加工するのがめんどくさいので、今回は<a href='https://openstreetmap.jp/'>OpenStreetMap</a>を背景に採用しました。
+右下の広域図は上記300かける400ピクセルの範囲内に収まっています。
+ちなみに、地理院タイルをリアルタイムに読み込む場合（例は<a href='./a1.html'>こちら</a>）は、出典の明示だけでOKです。画像として保存してから、それを公開してしまうと測量法が適用されてしまうと言うことですね。
+
+<blockquote cite='https://maps.gsi.go.jp/development/ichiran.html'>
+国土地理院のサーバ上にある地理院タイルを、リアルタイムで読み込み表示するウェブサイトやソフトウェア、アプリケーションを製作する場合、地理院タイルは出典の明示のみで申請不要でご利用いただけます。<br>
+―<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル一覧</a>
+</blockquote>
+
+</p>
+    ",
+    "history":["2018年12月16日公開（暫定）"]
+}

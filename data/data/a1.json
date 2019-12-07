@@ -1,0 +1,15 @@
+{
+    "title": "廃線地図",
+    "keyword": ["地図", "鉄道"],
+    "tag": [""],
+    "category":"ctg1",
+    "summary":"とりあえず、何もないのも寂しいので、廃線跡を気の向くままにトレースした地図へのリンクを載せておきます。",
+    "library":[""],
+    "article":"
+<p><a href='https://github.com/gsi-cyberjapan/gsimaps' target='_blank'>地理院地図のソースコード</a>をベースにした廃線マップです。
+個人的に気になった廃線跡を、<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>の写真からトレースしています。
+使い方としては、左上の「情報ボタン」→「オリジナル重ね合わせ情報」→好きな廃線跡をお選びください。なお、正確さについては保障できません。</p>
+<a href='https://mghs15.github.io/map1/' target='_blank'>地図はこちら（別ウィンドウが開きます）</a><br>
+    ",
+    "history":["2018年12月13日公開"]
+}

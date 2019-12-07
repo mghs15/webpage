@@ -1,0 +1,32 @@
+{
+    "title": "Hello World!",
+    "keyword": ["情報通信"],
+    "tag": [""],
+    "category":"ctg*",
+    "summary":"Hello World!",
+    "library":[""],
+    "article":"
+<h3>HELLO WORLD!</h3>
+
+<p>
+<a href='https://wakatech.jp/helloworld' target='_blank'>hello, world</a>とは？</p>
+<br>
+
+<div class='fig'>
+<a href='./test/1.JPG'><img src='./test/1.JPG' alt ='テスト用の写真' class='fig'></a><br>
+<p class='legend'>
+Hello World!
+</p></div>
+
+<h3>テスト</h3>
+
+<div class='codearea'><pre><code>
+puts 'hello, world'
+</code></pre></div>
+
+<p>
+こちらはテスト用のサイトです。
+</p>
+    ",
+    "history":["20**年*月**日公開"]
+}

@@ -1,0 +1,501 @@
+<!doctype html>
+<html><head><!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src='https://www.googletagmanager.com/gtag/js?id=UA-131319832-1'></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-131319832-1');
+</script><link rel='shortcut icon' href='../favicon.ico'>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<title>地図タイルのファイルサイズを可視化する</title>
+<link rel='stylesheet' type='text/css' href='../css/common.css'>
+</head><body>
+<div class='breadcrumbs'>
+<ul>
+<li><a href='../'>トップ</a></li>
+<li><a href='../ctg2.html'>郵便・統計・Web</a></li><li>地図タイルのファイルサイズを可視化する</li></ul></div><div class='title'><h2 class='article'>地図タイルのファイルサイズを可視化する</h2></div> <div class='keyarea'><a class='keyword'>　Web　</a><a>　</a><a class='keyword'>　R　</a><a>　</a><a class='keyword'>　統計　</a><a>　</a><a class='keyword'>　地図　</a><a>　</a></div> 
+<div class='go2attention'><a href='#attention'>注意事項はこちら</a></div>
+<div class='article'>
+<h3>はじめに</h3>
+<p>
+大きな地図をあらかじめ、256px四方の正方形（タイル）に分割しておき、地図が表示される画面に合わせて必要なタイルだけ表示すればよい、という仕組みをSlippy Map Tilenamesといいます。
+いちいち大きな地図をダウンロードする必要がないので、地図を軽快に見ることができます。配信側にも受信側にも良いことが多いということで、Webで地図を見るときに多くの場合に使われています。
+</p>
+
+<p class='ref'>出典　
+<a href='https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames'>Slippy map tilenames</a><br>―OpenStreetMap
+</p>
+
+<p>
+地図タイルについては、前回の記事も参考にしていただけたらと思います。
+</p>
+
+<p class='ref'>
+<a href='a12.html'>画面に表示される地図タイルの枚数</a>
+</p>
+
+<p>
+大きな地図をバラバラにする際には256px四方の正方形で分割するという決まりに従うので、タイルごとに情報量の差、つまりタイルのファイルサイズに差が出てくるはずです。画像タイルならば、ある程度一定の範囲のサイズに収まる？と思うのですが、ベクタ形式のタイルになると、情報量の差が顕著に出てきそうです。
+というわけで、タイルのファイルサイズを把握してみようという試みです。最終的にグラフやヒートマップにして、視覚的に表現することを目的とします。これで、ある地域を地図表示するときに、重いかどうか事前に覚悟しやすくなるでしょう（役に立つかは知りませんが……）。
+</p>
+
+<p>ちなみに、結果は<a href='./a13/r_leaflet.html' target='_blank'>こちら</a>になります。地図上で結果を確認できます。</p>
+
+<p>
+実験対象は、国土地理院が提供しているベクトルタイルのうち、『基盤地図情報（基本項目）』（ズームレベル18）を利用します。ファイルの拡張子はGeoJSONです。
+対象地域は、山も公園も都市もある札幌市の1区域にしてみました。
+札幌市は、山の麓まで住宅地が続いているイメージで、都市と山地の間に農地があんまりないイメージなんですよね。
+</p>
+
+<p class='ref'>出典　
+<a href='https://github.com/gsi-cyberjapan/experimental_fgd'>基盤地図情報（基本項目）のベクトルタイル提供実験</a><br>―国土地理院
+</p>
+
+<h3>タイルをダウンロードする</h3>
+<p>
+悲しいことに、ファイルをダウンロードしてみないことにはファイルサイズはわかりません。というわけで、ファイルをダウンロードします。
+Slippy Map Tilenamesのタイルが格納されるファイル構造は、zのフォルダの下に、xのフォルダがあって、その中にy.拡張子という形でファイルが格納されています（下図）。
+ダウンロードの際もこれに合わせました。
+</p>
+
+<div class='fig'>
+<a href='./a13/1.png'><img src='./a13/r1.jpg' class='fig'></a>
+<p class='legend'>
+Slippy Map Tilenamesのタイルが格納されるファイル構造
+</p></div>
+
+<p>
+ファイルをダウンロードするには、以下のRスクリプトを走らせます。
+</p>
+
+<p>
+”gsi_fgd_0217”というフォルダに、https://cyberjapandata.gsi.go.jp/xyz/experimental_fgd（/{z}/{x}/{y}.ext）からファイルをダウンロードしてきます。拡張子”ext”には、GeoJSONを指定します。
+あとは、適当な範囲として、経緯度（スクリプト中のx1,x2,y1,y2）を指定すれば、その範囲をカバーするようにタイルをダウンロードします。スクリプト中のz1,z2でズームレベルも指定できますが、今回は18のみ（18～18）です。
+</p>
+
+<div class='codearea'><pre><code>
+# 作業ディレクトリの設定<br>
+wd &lt- 'C:/Users/********/Documents/tiles' # お好きなパスを<br>
+setwd(wd)<br>
+<br>
+#  ----------------<br>
+#  |      y1      |<br>
+#  |              |<br>
+#  | x1        x2 |<br>
+#  |              |<br>
+#  |      y2      |<br>
+#  ----------------<br>
+#<br>
+#読み込みたい範囲とタイルURLの入力<br>
+x1 &lt- 141.306410<br>
+x2 &lt- 141.349669<br>
+y1 &lt- 43.036964<br>
+y2 &lt- 43.100795<br>
+z1 &lt- 18<br>
+z2 &lt- 18<br>
+folder &lt- 'gsi_fgd_0217' #保存するフォルダ名（作成しておかなくともよい）<br>
+tile.name &lt- 'https://cyberjapandata.gsi.go.jp/xyz/experimental_fgd' # Ordnance Survey<br>
+ext &lt- '.geojson' #拡張子<br>
+# 入力終わり<br>
+<br>
+# 以下演算<br>
+Z1 &lt- min(z1, z2)<br>
+Z2 &lt- max(z1, z2)<br>
+X1 &lt- min(x1, x2)<br>
+X2 &lt- max(x1, x2)<br>
+Y1 &lt- max(y1, y2) #x,zと逆であるので注意<br>
+Y2 &lt- min(y1, y2) #x,zと逆であるので注意<br>
+dir.create(folder)<br>
+<br>
+k &lt- Z1<br>
+while(k <= Z2){<br>
+zl &lt- k<br>
+#log.lat. to tile XY<br>
+tile.X1 &lt- floor((2^(zl-1))+(X1/180)*(2^(zl-1)))<br>
+tile.X2 &lt- floor((2^(zl-1))+(X2/180)*(2^(zl-1)))<br>
+tile.Y1 &lt- floor(((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(Y1*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(zl-1)))<br>
+tile.Y2 &lt- floor(((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(Y2*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(zl-1)))<br>
+z.wd &lt- paste(wd, '/', folder, sep='')<br>
+setwd(z.wd)<br>
+dir.create(as.character(zl)) #Zのフォルダを作成<br>
+tx &lt- tile.X1<br>
+while(tx <= tile.X2){<br>
+x.wd &lt- paste(z.wd, '/', zl, sep='')<br>
+setwd(x.wd)<br>
+dir.create(as.character(tx))<br>
+ty &lt- tile.Y1<br>
+while(ty <= tile.Y2){<br>
+y.file &lt- paste(x.wd, '/', tx, '/', ty, ext, sep='')<br>
+url &lt- paste(tile.name, '/', zl, '/', tx, '/', ty, ext, sep='')<br>
+tryCatch(<br>
+{<br>
+download.file(url, y.file, mode='wb')<br>
+}, error = function(e){}<br>
+)<br>
+ty &lt- ty+1<br>
+}#yのwhileを閉じる<br>
+tx &lt- tx+1<br>
+}#xのwhileを閉じる<br>
+k &lt- k+1<br>
+}#zのwhileを閉じる
+</code></pre></div>
+
+
+
+<h3>ファイルのファイルサイズを取得する</h3>
+<p>
+ファイルをダウンロードできたら、今度はファイルの情報（プロパティ）を取得します。Rでは、file.list()関数で、あるディレクトリ以下のファイル名をすべて取得し、その後、そのリストを使って、file.info()関数でファイルの情報をすべて取得します。
+（実行速度は遅いです。いつものことですが、もっと効率良さそうな方法がある気がします。）今回は、”gsi_fgd_0217”というフォルダにダウンロードしましたので、”gsi_fgd_0217”以下のファイルをすべて取得します。以下が、そのRスクリプトになります。
+</p>
+
+<div class='codearea'><pre><code>
+#目標ディレクトリの設定<br>
+setwd &lt- wd<br>
+folder &lt- 'gsi_fgd_0217'<br>
+sch_wd &lt- paste(wd, folder, sep='/')<br>
+<br>
+#ファイル情報の取得<br>
+listf &lt- list.files(sch_wd, recursive = TRUE, full.names = TRUE) #フルパス<br>
+listf &lt- listf[-length(listf)]#余分なファイルを除く<br>
+infof &lt- file.info(listf); head(infof)<br>
+summary(infof)<br>
+<br>
+#タイル座標の取得<br>
+listtile &lt- list.files(sch_wd, recursive = TRUE) #タイルのパスのみ<br>
+listtile &lt- listtile[-length(listtile)]#余分なファイルを除く<br>
+zxy &lt- strsplit(listtile, '/')<br>
+i &lt- 1<br>
+D &lt- NULL<br>
+while(i <= length(listtile)){<br>
+str &lt- zxy[[i]]<br>
+C &lt- c(str[1], str[2], str[3])<br>
+D &lt- rbind(D, C)<br>
+i &lt- i + 1}<br>
+colnames(D) &lt- c('z', 'x', 'y')<br>
+<br>
+#yを拡張子から分離<br>
+stry &lt- as.character(D[,'y']) #文字列分割<br>
+D[,'y'] &lt- as.numeric(unlist(strsplit(stry, ext)))<br>
+<br>
+#すべての情報を合わせる<br>
+info &lt- cbind(infof, D)<br>
+rownames(info) &lt- paste(info[,'z'], '/', info[,'x'], '/', info[,'y'],ext, sep='')<br>
+info[,'size'] &lt- info[,'size']/1000 #kbへ変換<br>
+summary(info)
+</code></pre></div>
+
+<p>
+以上のスクリプトを走らせると、変なファイルがディレクトリに混じっていなければ、以下のようなデータセット（行列）が得られます。
+このデータセットには、タイルサイズの他、タイルの生成時間（残念ながら、ダウンロードした日時になります）も含まれています。
+また、ファイルのパスにz/x/yの情報が含まれるので、これを分離して、新たにz,x,yという行にしておきます（格納された座標値は、今は文字列として格納されています）。
+</p>
+
+<div class='fig'>
+<a href='./a13/2.png'><img src='./a13/r2.jpg' class='fig'></a>
+<p class='legend'>
+得られたファイルの情報
+</p></div>
+
+<p>
+ここから、必要な情報として、x、y、タイルのファイルサイズのみを抽出した行列dfを作っておきます。また、x、yはタイル座標なので、これを経緯度に変換した行列df_LLも作成します。
+</p>
+
+<div class='codearea'><pre><code>
+#x、y、タイルのファイルサイズのみを抽出した行列dfの作成<br>
+zl &lt- '18'<br>
+C &lt- subset(info, info[,'z']==zl)<br>
+vx &lt- as.numeric(as.character(C[,'x']))<br>
+vy &lt- as.numeric(as.character(C[,'y']))<br>
+value &lt- C[, 'size']<br>
+<br>
+plot(vx, vy, pch=16, col = gray(value/max(value)))<br>
+<br>
+df &lt- cbind(vx, vy, value); colnames(df) &lt- c('x', 'y', 'value') # 上のデータをまとめる<br>
+plot(df); head(df)
+</code></pre></div>
+
+<div class='codearea'><pre><code>
+# タイル座標から経緯度へ<br>
+# Convert Tile x y to lon lat<br>
+vz &lt- as.numeric(zl)  #zoom level<br>
+lon_1 &lt- vx*360/(2^vz) - 180<br>
+lat_1 &lt- atan(sinh(pi - vy*2*pi/(2^vz)))*180/pi<br>
+lon_2 &lt- (vx+1)*360/(2^vz) - 180<br>
+lat_2 &lt- atan(sinh(pi - (vy+1)*2*pi/(2^vz)))*180/pi<br>
+lon &lt- (lon_1 + lon_2)/2; lat &lt- (lat_1 + lat_2)/2<br>
+plot(lon, lat, pch=16, col = gray(value/max(value)))<br>
+<br>
+df_LL &lt- cbind(lon, lat, value)<br>
+colnames(df_LL) &lt- c('x', 'y', 'value')<br>
+plot(df_LL); head(df_LL)
+</code></pre></div>
+
+<div class='fig'>
+<a href='./a13/3.png'><img src='./a13/r3.jpg' class='fig'></a>
+<p class='legend'>
+x、y、タイルサイズのみを抽出した行列df、および、x、yを経緯度に変換した行列df_LLの作成
+</p></div>
+
+
+<h3>タイルのファイルサイズに応じて色分けしたラスタを作る</h3>
+<p>
+位置座標(x,y)とタイルのファイルサイズという値が得られたので、これをラスタに変換します。</p>
+<p>
+Rの関数raster()でラスタ変換するまえに、データを位置データ＋グリッド化してあげる必要があるのですが、事前に経緯度に変換しておくと、このグリッド化の際にエラーが出ます。
+（グリッド感覚が違うと怒られます。）
+そのため、まずタイル座標のまま位置データ化→グリッド化→ラスタ化してから、ラスタの座標値を経緯度の変換しました。</p>
+
+<p>
+統計解析に必要そうなパッケージは最初に一気に読み込んでおきます。（どの関数がどのパッケージに入っていたか忘れてしまったための対処です……。）</p>
+<div class='codearea'><pre><code>
+library(spdep)<br>library(maptools)<br>library(gstat)<br>library(sp)<br>
+library(raster)<br>library(rgdal)<br>library(automap)
+</code></pre></div>
+
+<p>以下、df→データフレーム化→位置データ化→グリッド化→ラスタ化してから、ラスタの座標値を経緯度へ変換するスクリプトです。</p>
+
+<div class='codearea'><pre><code>
+# Raster of Tiles<br>
+datg &lt- as.data.frame(df) #データフレーム化<br>
+<br>
+datg['x'] &lt- datg['x'] + 0.5 #位置をタイルの中央へ<br>
+datg['y'] &lt- datg['y'] + 0.5 #位置をタイルの中央へ<br>
+<br>
+coordinates(datg) = ~x+y #位置データ化<br>
+gridded(datg) = TRUE #グリッド化<br>
+tile.raster &lt- raster(datg) #ラスタ化<br>
+plot(tile.raster)<br>
+str(tile.raster)<br>
+<br>
+# convert Raster's Tile Grid to Lon Lat<br>
+vz &lt- 18<br>
+tile.raster@extent[1] &lt- tile.raster@extent[1]*360/(2^vz) - 180<br>
+tile.raster@extent[2] &lt- tile.raster@extent[2]*360/(2^vz) - 180<br>
+ymin &lt- tile.raster@extent[3]<br>
+ymax &lt- tile.raster@extent[4]<br>
+tile.raster@extent[3] &lt- atan(sinh(pi - ymax*2*pi/(2^vz)))*180/pi<br>
+tile.raster@extent[4] &lt- atan(sinh(pi - ymin*2*pi/(2^vz)))*180/pi<br>
+<br>
+tile.raster &lt- flip(tile.raster, direction = 'y')<br>
+<br>
+#ラスタに空間参照系を設定
+tile.raster@crs  &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')<br>
+plot(tile.raster)
+</code></pre></div>
+
+<div class='fig'>
+<a href='./a13/4.png'><img src='./a13/r4.jpg' class='fig'></a>
+<p class='legend'>
+タイルごとのファイルサイズを色分けしてラスタ化
+</p></div>
+
+<p>
+また、このラスタを使って画素ごとの数値、つまりタイルごとのサイズの分布をヒストグラムとして視覚化できます。</p>
+
+<div class='codearea'><pre><code>
+# Histgram of Tile size<br>
+hist(tile.raster)
+</code></pre></div>
+
+<div class='fig'>
+<a href='./a13/10.png'><img src='./a13/r10.jpg' class='fig'></a>
+<p class='legend'>
+タイルサイズ分布のヒストグラム
+</p></div>
+
+<p>
+そうしたら、このラスタを実際に地図上に載せてみます。RからLeafletを扱えるライブラリ「leaflet」がありますので、これを使って、OpenStreetMapに重ねてみます。</p>
+<p>Leafletは、Web地図用のJavascriptライブラリです。</p>
+
+<p class='ref'>
+<a href='https://leafletjs.com/'>Leaflet</a>- a JavaScript library for interactive maps
+</p>
+
+
+<div class='codearea'><pre><code>
+# writeRaster(tile.raster, 'Tile_Raster.tiff', overwrite=TRUE, format='GTiff')<br>
+# もし必要ならGeoTiff（拡張子.tif）でタイルをラスタとして出力。<br>
+<br>
+library('leaflet'); library('tidyr')<br>
+<br>
+pal.t &lt- colorNumeric(c('blue','skyblue', 'white', 'yellow', 'orange'), values(tile.raster),  na.color = 'transparent')<br>
+map_t &lt- leaflet() %>% addTiles() %>% setView(lng=141.328082,lat=43.068825,zoom=13) %>%<br>
+addScaleBar(position='bottomleft', options=scaleBarOptions(imperial = FALSE)) %>%<br>
+addRasterImage(tile.raster, colors = pal.t, opacity = 0.5) %>%<br>
+addLegend(pal = pal.t, values = values(tile.raster), title = 'value &ltbr&gt [kb]')<br>
+map_t
+</code></pre></div>
+
+<div class='fig'>
+<a href='./a13/5.png'><img src='./a13/r5.jpg' class='fig'></a>
+<p class='legend'>
+タイルサイズを地図上で視覚化する。背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>。
+</p></div>
+
+<p>
+よい感じに仕上がったのではないでしょうか？</p>
+<p>住宅地で特にタイルのファイルサイズが大きいです。細かい住宅が多いタイルはファイルサイズが大きくなるみたいですね。
+いくら住宅の構成点が少ないとはいえ、ポリゴンにするにはGeoJSONでは4点の経緯度が必要ですし、その住宅の属性値が入り込むでしょうし、結構データが大きくなるのでしょうね。
+</p><p>一方、公園や学校、山間部などではファイルサイズが小さいことがわかります。
+大きな建物が多い札幌駅周辺も意外とファイルサイズは小さい方のようです。線路の周辺もファイルサイズは小さいですね。</p>
+<p>
+丸山、北大、競馬場はファイルサイズが特に小さいですね。丸山は等高線がありそうなものですが、属性値が少ないのでしょうか？
+タイルのファイルサイズは、単に描かれる線や点の総数だけでなく、属性値（これはベクタ形式のタイル特有ですよね）がどのくらい多いのかによっても変化するのには注意しなくてはいけません。</p>
+
+
+<h3>クリギングでなめらかな分布にする</h3>
+<p>
+とりあえず、上記だけで十分だと思うのですが、クリギングをやってみます。特に大きな目的はないのですが、もっとなめらかな分布（補間値）が得られること、何かしら空間分布を示すパラメータが得られます。
+クリギングの方法については以下の記事でも言及しましたが、利用するパッケージ等を変更しています。</p>
+
+<p class='ref'>
+<a href='a2.html'>“R”を使った空間統計‐クリギング</a>
+</p>
+
+
+<p>
+今回は、タイル座標が経緯度に変換されたdf_LLを用います。ただ、空間参照系を設定してしまうと、「経緯度使ってクリギングするな」と怒られます。
+クリギングは「距離」をもとに空間的な統計量を考えるものですから、経緯度を使うとよろしくないのはわかりますが、私はとりあえずWeb上のメルカトル投影での距離を考えて、経緯度で押し通します。
+なお、上述のように、タイル座標のまま、位置データ化→グリッド化→クリギング→結果をラスタ化してから、ラスタの座標値を経緯度の変換するのでもよいはずです。（むしろそちらの方が良いかも？）</p>
+<p>ちなみに、普通クリギング（Ordinary Kriging）と普遍クリギング（Universal Kriging）どっちもやってみます。
+</p>
+
+<div class='codearea'><pre><code>
+# Kriging<br>
+datLL_noref &lt- as.data.frame(df_LL) # use parameters of datLL<br>
+coordinates(datLL_noref) = ~x+y<br>
+dat.k &lt- datLL_noref # no CRS ref<br>
+# When you use dat_LL, use lat lon for kriging (if CRS is set, errors will appered)<br>
+<br>
+# グリッド grid (newdata)<br>
+coord &lt- coordinates(dat.k)<br>
+x.grid &lt- seq(min(coord[,1]), max(coord[,1]), length=100)<br>
+y.grid &lt- seq(min(coord[,2]), max(coord[,2]), length=100)<br>
+xy.grid &lt- expand.grid(x.grid, y.grid)<br>
+vxg &lt- seq(min(coord[,1]), max(coord[,1]), length=nrow(xy.grid))<br>
+vyg &lt- seq(min(coord[,2]), max(coord[,2]), length=nrow(xy.grid))<br>
+grid &lt- as.data.frame(cbind(xy.grid, vxg, vyg))<br>
+colnames(grid) &lt- c('x','y', colnames(grid)[-c(1:2)])<br>
+gridded(grid) = ~x+y<br>
+<br>
+# 普通クリギング　Ordinary kriging<br>
+kriging_o &lt- autoKrige(value~1, dat.k, grid, model = c('Sph', 'Exp', 'Gau', 'Lin')) <br>
+dev.new(); plot(kriging_o)<br>
+parameters_o &lt- kriging_o$var_model<br>
+krig_o &lt- kriging_o[[1]]<br>
+krig_o@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') # if needed when use lat lon for Kriging<br>
+r_o &lt- raster(krig_o['var1.pred'])<br>
+r_o_sd &lt- raster(krig_o['var1.stdev'])<br>
+<br>
+dev.new(); plot(r_o);contour(r_o, col='white', add=T)<br>
+# plot(r_o_sd);contour(r_o_sd, col='white', add=T)<br>
+<br>
+# 普遍クリギング Universal kriging<br>
+kriging_u &lt- autoKrige(value~x+y, dat.k, grid, model = c('Sph', 'Exp', 'Gau', 'Lin')) <br>
+dev.new(); plot(kriging_u)<br>
+parameters_u &lt- kriging_u$var_model<br>
+krig_u &lt- kriging_u[[1]]<br>
+krig_u@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') # if needed when use lat lon for Kriging<br>
+r_u &lt- raster(krig_u['var1.pred'])<br>
+r_u_sd &lt- raster(krig_u['var1.stdev'])<br>
+<br>
+dev.new(); plot(r_u);contour(r_u, col='white', add=T)<br>
+# plot(r_u_sd);contour(r_u_sd, col='white', add=T)<br>
+<br>
+<br>
+# クリギング結果の出力 Output result<br>
+# 投影変換<br>
+r_o_ll &lt- projectRaster(r_o, crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')<br>
+r_u_ll &lt- projectRaster(r_u, crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+</code></pre></div>
+
+<p>普通クリギング（Ordinary Kriging）と普遍クリギング（Universal Kriging）の結果は以下の通りです。
+</p>
+
+<div class='fig'>
+<a href='./a13/6.png'><img src='./a13/r6.jpg' class='fig'></a>
+<p class='legend'>
+普通クリギング（Ordinary Kriging）の結果。左上が、補間されたデータ、右上が標準誤差の分布を示す。
+下は経験的セミバリオグラムのモデル化を示した図で、各点の横にある数字は、その点を計算するのに用いられた2点のペアの総数を示す。
+バリオグラムの右下にある文字や数字は、経験的セミバリオグラムのモデルのパラメータ。
+</p></div>
+
+<div class='fig'>
+<a href='./a13/7.png'><img src='./a13/r7.jpg' class='fig'></a>
+<p class='legend'>
+普遍クリギング（Universal Kriging）の結果。図の見方は普通クリギング（Ordinary Kriging）の結果と同じ。
+</p></div>
+
+<p>
+今回用いたautomapパッケージに入っているautoKrig()関数は、いい感じにバリオグラムをフィットさせて、パラメータ（シル・レンジ・ナゲット）を出してくれます。ブラックボックス気味ですが。
+モデルのタイプ（球形とか指数とか）は選択可能ですし、パラメーターもきっと制御できるはず（希望）なので、ちゃんとやるときは、きちんと指定させながらやるんでしょうね。
+今回はきちんとしたものでないので、このままにします（パラメーターの解釈も、普通クリギングと普遍クリギンでそんな変わらないな～、くらいしかやってません）。
+</p>
+
+<p>最後に、Leafletですべての情報を表示してみましょう。普通、普遍クリギングの両結果のほか、タイル中心の位置（黒丸）、そして最初に作ったタイルサイズを示すラスタを載せました。
+</p><p>
+スクリプトは以下の通り。
+</p>
+
+<div class='codearea'><pre><code>
+# On Leaflet<br>
+dat.k.out &lt- dat.k<br>
+dat.k.out@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')<br>
+TilePos &lt- coordinates(dat.k.out)<br>
+tile_zoomlevel &lt- 1 + 10/vz<br>
+<br>
+pal.o &lt- colorNumeric(c('skyblue', 'white',  'brown'), values(r_o_ll),  na.color = 'transparent')<br>
+pal.u &lt- colorNumeric(c('violet', 'white',  'green'), values(r_u_ll),  na.color = 'transparent')<br>
+pal.t &lt- colorNumeric(c('blue','skyblue', 'white', 'yellow', 'red'), values(tile.raster),  na.color = 'transparent')<br>
+atr_gsi &lt- '&lta href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'&gtGSI-Tiles&lt/a&gt'<br>
+map &lt- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% setView(lng=141.328082,lat=43.068825,zoom=13) %>%<br>
+# add tiles<br>
+addTiles('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', attribution = atr_gsi, group = 'GSI Tiles') %>%<br>
+addTiles(group = 'OpenStreetMap') %>%<br>
+# add original data<br>
+addCircleMarkers(TilePos[,'x'], TilePos[,'y'], group = 'TilePos', color= 'blue', stroke=FALSE, radius = tile_zoomlevel) %>%<br>
+# add kriging results (raster)<br>
+addRasterImage(r_o_ll, colors = pal.o, opacity = 0.5, group = 'OrdKri') %>%<br>
+addLegend(pal = pal.o, values = values(r_o_ll), title = 'size &ltbr&gt [kb] &ltbr&gt Ord', group = 'OrdKri', position='topleft') %>%<br>
+addRasterImage(r_u_ll, colors = pal.u, opacity = 0.5, group = 'UniKri') %>%<br>
+addLegend(pal = pal.u, values = values(r_u_ll), title = 'size &ltbr&gt [kb] &ltbr&gt Uni', group = 'UniKri', position='topleft') %>%<br>
+addRasterImage(tile.raster, colors = pal.t, opacity = 0.5, group = 'TileGrid') %>%<br>
+addLegend(pal = pal.t, values = values(tile.raster), title = 'size &ltbr&gt [kb] &ltbr&gt TileGrid', group = 'TileGrid', position='topleft') %>%<br>
+# set tiles and raster on maps<br>
+addLayersControl(<br>
+baseGroups = c('OpenStreetMap', 'GSI Tiles'),<br>
+overlayGroups = c('TilePos', 'TileGrid', 'OrdKri', 'UniKri'),<br>
+position='topright',<br>
+options=layersControlOptions(collapsed = TRUE)<br>
+) %>%<br>
+# add scale bar<br>
+addScaleBar(position='bottomleft', options=scaleBarOptions(imperial = FALSE))<br>
+<br>
+map
+</code></pre></div>
+
+<div class='fig'>
+<a href='./a13/8.png'><img src='./a13/r8.jpg' class='fig'></a>
+<p class='legend'>
+普通クリギング（Ordinary Kriging）の結果を地図上で表示する。背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>。
+青い点は、タイルの中心点を示す。
+</p></div>
+
+<div class='fig'>
+<a href='./a13/9.png'><img src='./a13/r9.jpg' class='fig'></a>
+<p class='legend'>
+普遍クリギング（Universal Kriging）の結果を地図上で表示する。背景地図は<a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>。
+青い点は、タイルの中心点を示す。
+</p></div>
+
+<p>以上の結果は、HTMLとして出力されています。（出力される場所が分かりにくいのですが……。）今回の結果は<a href='./a13/r_leaflet.html' target='_blank'>こちら</a>で確認できます。
+これはRで出力された結果をそのまま表示していますが、中のJavascriptをいじれるのか検証してもいいかもしれません。</p>
+
+    </div> <div class='page_top'><a href='#top'>▲Page TOP</a></div>
+<div id ='attention' class='attention'><p>
+注意事項<br>本Webサイトで提供する情報の利用は自己責任でお願いいたします。また、画像や文章の著作権は放棄しておりません（HTMLやRのコードはご自由に利用ください）。
+このHPで述べる内容は、私の所属するいかなる組織の見解をも代表するものではありません。<br>このページでは、Google Analyticsを用いたアクセス解析（Cookieの利用等）を行っております。
+</p></div><div class='history'><p> <p> 2019年2月17日公開 </p></p></div></body></html>

@@ -1,0 +1,77 @@
+### convert single json to a html file
+
+#install.packages("RJSONIO")
+#library("RJSONIO")
+#library("rjson")
+
+file <- "a2" # file name you want
+jsonf <- paste(file, "json", sep=".")
+htmlf <- paste(file, "html", sep=".")
+
+path.i <- paste("GitHub/webpage/data/data", jsonf, sep="/")
+
+data <- fromJSON(paste(readLines(path.i, encoding="UTF-8"), collapse=""))
+
+################################################
+
+# get contents in json file
+title <- data[["title"]]
+keyword_n <- data[["keyword"]] 
+tag_n <- data[["tag"]]
+article <- data[["article"]]
+history_n <- data[["history"]]
+
+# convert multi words to single word e.g. "a", "b" -> "a, b" 
+i <- 1
+D <- NULL
+while(i <= length(keyword_n)){
+	D <- paste(D, "<a class='keyword'>", "　", keyword_n[i], "　", "</a><a>　</a>", sep="")
+	i <- i + 1
+}
+keyword <- D
+
+i <- 1
+D <- NULL
+while(i <= length(tag_n)){
+	D <- paste(D, tag_n[i], sep=" ")
+	i <- i + 1
+}
+tag <- D
+
+i <- 1
+D <- NULL
+while(i <= length(history_n)){
+	D <- paste(D, "<p>", history_n[i], "</p>", sep=" ")
+	i <- i + 1
+}
+history <- D
+
+# make HTML contents
+html_head <- "<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<title>
+gh-pagesでHPを公開する試み
+</title>
+<link rel='stylesheet' type='text/css' href='../css/common.css'>
+</head>
+<body><p><a href='../index.html'>gh-pagesでHPを公開する試み</a></p>
+<div class='title'><h2 class='article'>
+"
+# before title
+html_key <- "</h2></div> <div class='keyarea'>"  # before keyword
+html_art <- "</div> <div class='article'>" # before article
+html_his <- "</div> <div class='attention'><p>
+注意事項<br>本Webサイトで提供する情報の利用は自己責任でお願いいたします。また、画像や文章の著作権は放棄しておりません。
+</p></div><div class='history'><p>" # before history
+html_tale <- "</p></div></body></html>" # end
+
+html <- paste(html_head, title, html_key, keyword, html_art, article, html_his, history, html_tale, sep="")
+
+################################################
+path.o <- paste("GitHub/webpage/docs/article/", htmlf, sep="")
+write.table(html, path.o, fileEncoding="UTF-8", col.name=FALSE, row.names=FALSE, quote=FALSE, sep="\n")
+
+

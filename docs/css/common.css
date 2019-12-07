@@ -1,0 +1,254 @@
+/*
+いろんなとこからコピペしまくったため、ぐちゃぐちゃです
+*/
+
+/*ホームページ全体*/
+body {
+	padding: 0 2.5%; 
+	height: 97.5%; 
+	width: 95%;
+	max-width: 728px;
+	margin-right: auto;
+	margin-left : auto;
+	overflow: scroll;
+	background-color: #FFFFFF;
+	color: #000000;
+	line-height: 200%;
+}
+
+/*タイトル*/
+h1{
+	padding: 1em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	background: #fffaf4;/*背景色*/
+	border-left: solid 5px #ffaf58;/*左線（実線 太さ 色）*/
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+	line-height: 160%;
+}
+
+/*小項目*/
+h3{
+	padding: 0.5em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	border-top: dashed 2px #ffaf58;/*線の種類（点線）2px 線色*/
+	border-bottom: dashed 2px #ffaf58;/*線の種類（点線）2px 線色*/
+	font-size: 120%; 
+}
+
+/*小項目*/
+h4{
+	padding: 0.25em 1em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	border-left: solid 6px #ffaf58;/*左線（実線 太さ 色）*/
+	font-size: 100%; 
+}
+
+/*トップへ戻る*/
+div.page_top{
+	padding: 0.5em;/*文字周りの余白*/
+//	background: #FCE4BA;/*背景色*/
+	line-height: 100%;
+	text-align: center;
+	border-top: solid 2px #FCE4BA;/*線の種類（点線）2px 線色*/
+	border-bottom: solid 2px #FCE4BA;/*線の種類（点線）2px 線色*/
+}
+div.page_top a:hover {
+	text-decoration: underline;
+}
+
+
+/***********************************/
+/*記事一覧*/
+h2.ctg{
+	padding: 0.5em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	background: #fffaf4;/*背景色*/
+	/*background: #dce3ba; 背景色 うぐいす*/
+	border-left: solid 10px #ffaf58;/*左線（実線 太さ 色）*/
+	/*border-left: solid 5px #7967C3; 左線（実線 太さ 色）紫*/
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+}
+
+ul.ichiran{
+	padding-left: 0px
+}
+
+ul.ichiran li{
+	background: #FCE4BA;
+	border: 1px solid #eeeeee;
+	border-radius: 0.4em;/*角の丸み*/
+	margin:10px 0;
+	padding: 15px 15px 0 15px;
+	list-style-type: none;
+	line-height: 100%;
+}
+
+ul.ichiran p{
+	line-height: 100%;
+}
+
+/***********************************/
+/*パンくずリスト*/
+.breadcrumbs {
+  margin:0;
+  padding:0;
+  line-height: 120%; 
+}
+
+.breadcrumbs ul{
+  margin:0;
+  padding:0;
+}
+
+.breadcrumbs li{
+  display:inline;/*横に並ぶように*/
+  list-style: none;
+
+}
+
+.breadcrumbs li:after{/* >を表示*/
+  content: '>';
+  padding: 0 3px;
+  color: #555;
+}
+
+.breadcrumbs li:last-child:after{
+  content: '';
+}
+
+.breadcrumbs li a {
+    text-decoration: none;
+    color: #ff6600;/*色*/
+}
+
+.breadcrumbs li a:hover {
+    text-decoration: underline;
+}
+
+
+/*タイトル*/
+h2.article{
+	padding: 0.5em;/*文字周りの余白*/
+	color: #494949;/*文字色*/
+	background: #fffaf4;/*背景色*/
+	/*background: #dce3ba; 背景色 うぐいす*/
+	border-left: solid 10px #ffaf58;/*左線（実線 太さ 色）*/
+	/*border-left: solid 5px #7967C3; 左線（実線 太さ 色）紫*/
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+	font-size: 120%; 
+}
+
+p:before {
+}
+
+
+/*キーワード全体*/
+div.keyarea{
+}
+
+/*個々のキーワード*/
+a.keyword{
+	background: #FCE4BA;
+	/*background: #D5CFEC; 紫*/
+	padding: 2px;
+	text-align: center;
+	/*box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);*/
+	border: 1px solid #eeeeee;
+	border-radius: 0.3em;/*角の丸み*/
+}
+
+/*キーワード全体*/
+div.go2attention{
+	padding: 5px 5px 0px 0px;
+}
+
+/*本文全体*/
+div.article{
+	line-height: 140%;
+	padding: 5px;
+}
+
+/*コード部分*/
+div.codearea{
+	line-height: 120%;
+	background: #eeeeee;
+	color: #000000;
+	margin: 10px;
+	padding: 2px 10px;
+	border-radius: 0.3em;/*角の丸み*/
+	overflow: auto;
+}
+
+/*図表部分全体*/
+div.fig{
+	background: #ffffff;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.23);
+	font-size: 100%; 
+	margin:10px 10px 30px 10px;
+	padding: 15px 15px;
+	border-radius: 0.3em;/*角の丸み*/
+	overflow: auto;
+//	text-align: center;
+}
+
+/*図表の説明部分*/
+p.legend{
+	text-align: left;
+	line-height: 130%;
+	margin: 15px 15px 0px 15px;
+}
+p.legend　li{
+	text-align: left;
+}
+
+/*図*/
+div.fig img{
+ 	display:block;	 	
+ 	max-width: 100%;	 	
+ 	max-height: 500px;	 	
+ 	margin-right: auto;	 	
+ 	margin-left : auto;	 
+ 	text-align: center;	 
+}
+
+/*引用（文章）*/
+blockquote{
+	margin:10px 10px 15px 10px;/*上、右、下、左*/
+	padding: 10px 15px;
+	color: #494949;/*文字色*/
+//	background: #e0f5ff;/*背景色*/
+	border-left: solid 10px #bad2fc;/*左線（実線 太さ 色）*/
+	border-top: dashed 1px #bad2fc;/*線の種類（点線）2px 線色*/
+	border-bottom: dashed 1px #bad2fc;/*線の種類（点線）2px 線色*/
+	border-right: dashed 1px #bad2fc;/*線の種類（点線）2px 線色*/
+//	box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+	font-size: 100%; 
+}
+
+/*参考文献（サイト等の紹介）*/
+p.ref{
+	border: 2px solid #bad2fc; /*左線（実線 太さ 色）*/
+	padding: 0.5em;/*文字周りの余白*/
+	border-radius: 0.5em;/*角の丸み*/	
+	margin:5px 10px 5px 10px;/*上、右、下、左*/
+	padding: 5px 15px 5px 23px;/*左は、引用（文章）に合わせた。ライン幅分配慮*/
+	overflow: auto;
+}
+
+/*注意事項*/
+div.attention{
+	background: #eeeeee;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.23);
+	font-size: 95%; 
+	line-height: 130%;
+	margin: 15px 0px;
+	padding: 1px 10px;
+	border-radius: 0.3em;/*角の丸み*/
+}
+
+/*履歴全体*/
+div.history{
+	line-height: 100%;
+	padding: 0 5px;
+	font-size: 95%; 
+}
