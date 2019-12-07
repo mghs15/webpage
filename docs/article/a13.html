@@ -77,69 +77,69 @@ Slippy Map Tilenamesのタイルが格納されるファイル構造
 </p>
 
 <div class='codearea'><pre><code>
-# 作業ディレクトリの設定<br>
-wd &lt- 'C:/Users/********/Documents/tiles' # お好きなパスを<br>
-setwd(wd)<br>
-<br>
-#  ----------------<br>
-#  |      y1      |<br>
-#  |              |<br>
-#  | x1        x2 |<br>
-#  |              |<br>
-#  |      y2      |<br>
-#  ----------------<br>
-#<br>
-#読み込みたい範囲とタイルURLの入力<br>
-x1 &lt- 141.306410<br>
-x2 &lt- 141.349669<br>
-y1 &lt- 43.036964<br>
-y2 &lt- 43.100795<br>
-z1 &lt- 18<br>
-z2 &lt- 18<br>
-folder &lt- 'gsi_fgd_0217' #保存するフォルダ名（作成しておかなくともよい）<br>
-tile.name &lt- 'https://cyberjapandata.gsi.go.jp/xyz/experimental_fgd' # Ordnance Survey<br>
-ext &lt- '.geojson' #拡張子<br>
-# 入力終わり<br>
-<br>
-# 以下演算<br>
-Z1 &lt- min(z1, z2)<br>
-Z2 &lt- max(z1, z2)<br>
-X1 &lt- min(x1, x2)<br>
-X2 &lt- max(x1, x2)<br>
-Y1 &lt- max(y1, y2) #x,zと逆であるので注意<br>
-Y2 &lt- min(y1, y2) #x,zと逆であるので注意<br>
-dir.create(folder)<br>
-<br>
-k &lt- Z1<br>
-while(k <= Z2){<br>
-zl &lt- k<br>
-#log.lat. to tile XY<br>
-tile.X1 &lt- floor((2^(zl-1))+(X1/180)*(2^(zl-1)))<br>
-tile.X2 &lt- floor((2^(zl-1))+(X2/180)*(2^(zl-1)))<br>
-tile.Y1 &lt- floor(((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(Y1*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(zl-1)))<br>
-tile.Y2 &lt- floor(((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(Y2*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(zl-1)))<br>
-z.wd &lt- paste(wd, '/', folder, sep='')<br>
-setwd(z.wd)<br>
-dir.create(as.character(zl)) #Zのフォルダを作成<br>
-tx &lt- tile.X1<br>
-while(tx <= tile.X2){<br>
-x.wd &lt- paste(z.wd, '/', zl, sep='')<br>
-setwd(x.wd)<br>
-dir.create(as.character(tx))<br>
-ty &lt- tile.Y1<br>
-while(ty <= tile.Y2){<br>
-y.file &lt- paste(x.wd, '/', tx, '/', ty, ext, sep='')<br>
-url &lt- paste(tile.name, '/', zl, '/', tx, '/', ty, ext, sep='')<br>
-tryCatch(<br>
-{<br>
-download.file(url, y.file, mode='wb')<br>
-}, error = function(e){}<br>
-)<br>
-ty &lt- ty+1<br>
-}#yのwhileを閉じる<br>
-tx &lt- tx+1<br>
-}#xのwhileを閉じる<br>
-k &lt- k+1<br>
+# 作業ディレクトリの設定
+wd &lt- 'C:/Users/********/Documents/tiles' # お好きなパスを
+setwd(wd)
+
+#  ----------------
+#  |      y1      |
+#  |              |
+#  | x1        x2 |
+#  |              |
+#  |      y2      |
+#  ----------------
+#
+#読み込みたい範囲とタイルURLの入力
+x1 &lt- 141.306410
+x2 &lt- 141.349669
+y1 &lt- 43.036964
+y2 &lt- 43.100795
+z1 &lt- 18
+z2 &lt- 18
+folder &lt- 'gsi_fgd_0217' #保存するフォルダ名（作成しておかなくともよい）
+tile.name &lt- 'https://cyberjapandata.gsi.go.jp/xyz/experimental_fgd' # Ordnance Survey
+ext &lt- '.geojson' #拡張子
+# 入力終わり
+
+# 以下演算
+Z1 &lt- min(z1, z2)
+Z2 &lt- max(z1, z2)
+X1 &lt- min(x1, x2)
+X2 &lt- max(x1, x2)
+Y1 &lt- max(y1, y2) #x,zと逆であるので注意
+Y2 &lt- min(y1, y2) #x,zと逆であるので注意
+dir.create(folder)
+
+k &lt- Z1
+while(k <= Z2){
+zl &lt- k
+#log.lat. to tile XY
+tile.X1 &lt- floor((2^(zl-1))+(X1/180)*(2^(zl-1)))
+tile.X2 &lt- floor((2^(zl-1))+(X2/180)*(2^(zl-1)))
+tile.Y1 &lt- floor(((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(Y1*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(zl-1)))
+tile.Y2 &lt- floor(((log(tan(85.051129*(pi/180)/2+pi/4))-log(tan(Y2*(pi/180)/2+pi/4)))/log(tan(85.051129*(pi/180)/2+pi/4)))*(2^(zl-1)))
+z.wd &lt- paste(wd, '/', folder, sep='')
+setwd(z.wd)
+dir.create(as.character(zl)) #Zのフォルダを作成
+tx &lt- tile.X1
+while(tx <= tile.X2){
+x.wd &lt- paste(z.wd, '/', zl, sep='')
+setwd(x.wd)
+dir.create(as.character(tx))
+ty &lt- tile.Y1
+while(ty <= tile.Y2){
+y.file &lt- paste(x.wd, '/', tx, '/', ty, ext, sep='')
+url &lt- paste(tile.name, '/', zl, '/', tx, '/', ty, ext, sep='')
+tryCatch(
+{
+download.file(url, y.file, mode='wb')
+}, error = function(e){}
+)
+ty &lt- ty+1
+}#yのwhileを閉じる
+tx &lt- tx+1
+}#xのwhileを閉じる
+k &lt- k+1
 }#zのwhileを閉じる
 </code></pre></div>
 
@@ -152,38 +152,38 @@ k &lt- k+1<br>
 </p>
 
 <div class='codearea'><pre><code>
-#目標ディレクトリの設定<br>
-setwd &lt- wd<br>
-folder &lt- 'gsi_fgd_0217'<br>
-sch_wd &lt- paste(wd, folder, sep='/')<br>
-<br>
-#ファイル情報の取得<br>
-listf &lt- list.files(sch_wd, recursive = TRUE, full.names = TRUE) #フルパス<br>
-listf &lt- listf[-length(listf)]#余分なファイルを除く<br>
-infof &lt- file.info(listf); head(infof)<br>
-summary(infof)<br>
-<br>
-#タイル座標の取得<br>
-listtile &lt- list.files(sch_wd, recursive = TRUE) #タイルのパスのみ<br>
-listtile &lt- listtile[-length(listtile)]#余分なファイルを除く<br>
-zxy &lt- strsplit(listtile, '/')<br>
-i &lt- 1<br>
-D &lt- NULL<br>
-while(i <= length(listtile)){<br>
-str &lt- zxy[[i]]<br>
-C &lt- c(str[1], str[2], str[3])<br>
-D &lt- rbind(D, C)<br>
-i &lt- i + 1}<br>
-colnames(D) &lt- c('z', 'x', 'y')<br>
-<br>
-#yを拡張子から分離<br>
-stry &lt- as.character(D[,'y']) #文字列分割<br>
-D[,'y'] &lt- as.numeric(unlist(strsplit(stry, ext)))<br>
-<br>
-#すべての情報を合わせる<br>
-info &lt- cbind(infof, D)<br>
-rownames(info) &lt- paste(info[,'z'], '/', info[,'x'], '/', info[,'y'],ext, sep='')<br>
-info[,'size'] &lt- info[,'size']/1000 #kbへ変換<br>
+#目標ディレクトリの設定
+setwd &lt- wd
+folder &lt- 'gsi_fgd_0217'
+sch_wd &lt- paste(wd, folder, sep='/')
+
+#ファイル情報の取得
+listf &lt- list.files(sch_wd, recursive = TRUE, full.names = TRUE) #フルパス
+listf &lt- listf[-length(listf)]#余分なファイルを除く
+infof &lt- file.info(listf); head(infof)
+summary(infof)
+
+#タイル座標の取得
+listtile &lt- list.files(sch_wd, recursive = TRUE) #タイルのパスのみ
+listtile &lt- listtile[-length(listtile)]#余分なファイルを除く
+zxy &lt- strsplit(listtile, '/')
+i &lt- 1
+D &lt- NULL
+while(i <= length(listtile)){
+str &lt- zxy[[i]]
+C &lt- c(str[1], str[2], str[3])
+D &lt- rbind(D, C)
+i &lt- i + 1}
+colnames(D) &lt- c('z', 'x', 'y')
+
+#yを拡張子から分離
+stry &lt- as.character(D[,'y']) #文字列分割
+D[,'y'] &lt- as.numeric(unlist(strsplit(stry, ext)))
+
+#すべての情報を合わせる
+info &lt- cbind(infof, D)
+rownames(info) &lt- paste(info[,'z'], '/', info[,'x'], '/', info[,'y'],ext, sep='')
+info[,'size'] &lt- info[,'size']/1000 #kbへ変換
 summary(info)
 </code></pre></div>
 
@@ -204,32 +204,32 @@ summary(info)
 </p>
 
 <div class='codearea'><pre><code>
-#x、y、タイルのファイルサイズのみを抽出した行列dfの作成<br>
-zl &lt- '18'<br>
-C &lt- subset(info, info[,'z']==zl)<br>
-vx &lt- as.numeric(as.character(C[,'x']))<br>
-vy &lt- as.numeric(as.character(C[,'y']))<br>
-value &lt- C[, 'size']<br>
-<br>
-plot(vx, vy, pch=16, col = gray(value/max(value)))<br>
-<br>
-df &lt- cbind(vx, vy, value); colnames(df) &lt- c('x', 'y', 'value') # 上のデータをまとめる<br>
+#x、y、タイルのファイルサイズのみを抽出した行列dfの作成
+zl &lt- '18'
+C &lt- subset(info, info[,'z']==zl)
+vx &lt- as.numeric(as.character(C[,'x']))
+vy &lt- as.numeric(as.character(C[,'y']))
+value &lt- C[, 'size']
+
+plot(vx, vy, pch=16, col = gray(value/max(value)))
+
+df &lt- cbind(vx, vy, value); colnames(df) &lt- c('x', 'y', 'value') # 上のデータをまとめる
 plot(df); head(df)
 </code></pre></div>
 
 <div class='codearea'><pre><code>
-# タイル座標から経緯度へ<br>
-# Convert Tile x y to lon lat<br>
-vz &lt- as.numeric(zl)  #zoom level<br>
-lon_1 &lt- vx*360/(2^vz) - 180<br>
-lat_1 &lt- atan(sinh(pi - vy*2*pi/(2^vz)))*180/pi<br>
-lon_2 &lt- (vx+1)*360/(2^vz) - 180<br>
-lat_2 &lt- atan(sinh(pi - (vy+1)*2*pi/(2^vz)))*180/pi<br>
-lon &lt- (lon_1 + lon_2)/2; lat &lt- (lat_1 + lat_2)/2<br>
-plot(lon, lat, pch=16, col = gray(value/max(value)))<br>
-<br>
-df_LL &lt- cbind(lon, lat, value)<br>
-colnames(df_LL) &lt- c('x', 'y', 'value')<br>
+# タイル座標から経緯度へ
+# Convert Tile x y to lon lat
+vz &lt- as.numeric(zl)  #zoom level
+lon_1 &lt- vx*360/(2^vz) - 180
+lat_1 &lt- atan(sinh(pi - vy*2*pi/(2^vz)))*180/pi
+lon_2 &lt- (vx+1)*360/(2^vz) - 180
+lat_2 &lt- atan(sinh(pi - (vy+1)*2*pi/(2^vz)))*180/pi
+lon &lt- (lon_1 + lon_2)/2; lat &lt- (lat_1 + lat_2)/2
+plot(lon, lat, pch=16, col = gray(value/max(value)))
+
+df_LL &lt- cbind(lon, lat, value)
+colnames(df_LL) &lt- c('x', 'y', 'value')
 plot(df_LL); head(df_LL)
 </code></pre></div>
 
@@ -251,38 +251,43 @@ Rの関数raster()でラスタ変換するまえに、データを位置デー�
 <p>
 統計解析に必要そうなパッケージは最初に一気に読み込んでおきます。（どの関数がどのパッケージに入っていたか忘れてしまったための対処です……。）</p>
 <div class='codearea'><pre><code>
-library(spdep)<br>library(maptools)<br>library(gstat)<br>library(sp)<br>
-library(raster)<br>library(rgdal)<br>library(automap)
+library(spdep)
+library(maptools)
+library(gstat)
+library(sp)
+library(raster)
+library(rgdal)
+library(automap)
 </code></pre></div>
 
 <p>以下、df→データフレーム化→位置データ化→グリッド化→ラスタ化してから、ラスタの座標値を経緯度へ変換するスクリプトです。</p>
 
 <div class='codearea'><pre><code>
-# Raster of Tiles<br>
-datg &lt- as.data.frame(df) #データフレーム化<br>
-<br>
-datg['x'] &lt- datg['x'] + 0.5 #位置をタイルの中央へ<br>
-datg['y'] &lt- datg['y'] + 0.5 #位置をタイルの中央へ<br>
-<br>
-coordinates(datg) = ~x+y #位置データ化<br>
-gridded(datg) = TRUE #グリッド化<br>
-tile.raster &lt- raster(datg) #ラスタ化<br>
-plot(tile.raster)<br>
-str(tile.raster)<br>
-<br>
-# convert Raster's Tile Grid to Lon Lat<br>
-vz &lt- 18<br>
-tile.raster@extent[1] &lt- tile.raster@extent[1]*360/(2^vz) - 180<br>
-tile.raster@extent[2] &lt- tile.raster@extent[2]*360/(2^vz) - 180<br>
-ymin &lt- tile.raster@extent[3]<br>
-ymax &lt- tile.raster@extent[4]<br>
-tile.raster@extent[3] &lt- atan(sinh(pi - ymax*2*pi/(2^vz)))*180/pi<br>
-tile.raster@extent[4] &lt- atan(sinh(pi - ymin*2*pi/(2^vz)))*180/pi<br>
-<br>
-tile.raster &lt- flip(tile.raster, direction = 'y')<br>
-<br>
+# Raster of Tiles
+datg &lt- as.data.frame(df) #データフレーム化
+
+datg['x'] &lt- datg['x'] + 0.5 #位置をタイルの中央へ
+datg['y'] &lt- datg['y'] + 0.5 #位置をタイルの中央へ
+
+coordinates(datg) = ~x+y #位置データ化
+gridded(datg) = TRUE #グリッド化
+tile.raster &lt- raster(datg) #ラスタ化
+plot(tile.raster)
+str(tile.raster)
+
+# convert Raster's Tile Grid to Lon Lat
+vz &lt- 18
+tile.raster@extent[1] &lt- tile.raster@extent[1]*360/(2^vz) - 180
+tile.raster@extent[2] &lt- tile.raster@extent[2]*360/(2^vz) - 180
+ymin &lt- tile.raster@extent[3]
+ymax &lt- tile.raster@extent[4]
+tile.raster@extent[3] &lt- atan(sinh(pi - ymax*2*pi/(2^vz)))*180/pi
+tile.raster@extent[4] &lt- atan(sinh(pi - ymin*2*pi/(2^vz)))*180/pi
+
+tile.raster &lt- flip(tile.raster, direction = 'y')
+
 #ラスタに空間参照系を設定
-tile.raster@crs  &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')<br>
+tile.raster@crs  &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
 plot(tile.raster)
 </code></pre></div>
 
@@ -296,7 +301,7 @@ plot(tile.raster)
 また、このラスタを使って画素ごとの数値、つまりタイルごとのサイズの分布をヒストグラムとして視覚化できます。</p>
 
 <div class='codearea'><pre><code>
-# Histgram of Tile size<br>
+# Histgram of Tile size
 hist(tile.raster)
 </code></pre></div>
 
@@ -316,16 +321,16 @@ hist(tile.raster)
 
 
 <div class='codearea'><pre><code>
-# writeRaster(tile.raster, 'Tile_Raster.tiff', overwrite=TRUE, format='GTiff')<br>
-# もし必要ならGeoTiff（拡張子.tif）でタイルをラスタとして出力。<br>
-<br>
-library('leaflet'); library('tidyr')<br>
-<br>
-pal.t &lt- colorNumeric(c('blue','skyblue', 'white', 'yellow', 'orange'), values(tile.raster),  na.color = 'transparent')<br>
-map_t &lt- leaflet() %>% addTiles() %>% setView(lng=141.328082,lat=43.068825,zoom=13) %>%<br>
-addScaleBar(position='bottomleft', options=scaleBarOptions(imperial = FALSE)) %>%<br>
-addRasterImage(tile.raster, colors = pal.t, opacity = 0.5) %>%<br>
-addLegend(pal = pal.t, values = values(tile.raster), title = 'value &ltbr&gt [kb]')<br>
+# writeRaster(tile.raster, 'Tile_Raster.tiff', overwrite=TRUE, format='GTiff')
+# もし必要ならGeoTiff（拡張子.tif）でタイルをラスタとして出力。
+
+library('leaflet'); library('tidyr')
+
+pal.t &lt- colorNumeric(c('blue','skyblue', 'white', 'yellow', 'orange'), values(tile.raster),  na.color = 'transparent')
+map_t &lt- leaflet() %>% addTiles() %>% setView(lng=141.328082,lat=43.068825,zoom=13) %>%
+addScaleBar(position='bottomleft', options=scaleBarOptions(imperial = FALSE)) %>%
+addRasterImage(tile.raster, colors = pal.t, opacity = 0.5) %>%
+addLegend(pal = pal.t, values = values(tile.raster), title = 'value &ltbr&gt [kb]')
 map_t
 </code></pre></div>
 
@@ -364,51 +369,51 @@ map_t
 </p>
 
 <div class='codearea'><pre><code>
-# Kriging<br>
-datLL_noref &lt- as.data.frame(df_LL) # use parameters of datLL<br>
-coordinates(datLL_noref) = ~x+y<br>
-dat.k &lt- datLL_noref # no CRS ref<br>
-# When you use dat_LL, use lat lon for kriging (if CRS is set, errors will appered)<br>
-<br>
-# グリッド grid (newdata)<br>
-coord &lt- coordinates(dat.k)<br>
-x.grid &lt- seq(min(coord[,1]), max(coord[,1]), length=100)<br>
-y.grid &lt- seq(min(coord[,2]), max(coord[,2]), length=100)<br>
-xy.grid &lt- expand.grid(x.grid, y.grid)<br>
-vxg &lt- seq(min(coord[,1]), max(coord[,1]), length=nrow(xy.grid))<br>
-vyg &lt- seq(min(coord[,2]), max(coord[,2]), length=nrow(xy.grid))<br>
-grid &lt- as.data.frame(cbind(xy.grid, vxg, vyg))<br>
-colnames(grid) &lt- c('x','y', colnames(grid)[-c(1:2)])<br>
-gridded(grid) = ~x+y<br>
-<br>
-# 普通クリギング　Ordinary kriging<br>
-kriging_o &lt- autoKrige(value~1, dat.k, grid, model = c('Sph', 'Exp', 'Gau', 'Lin')) <br>
-dev.new(); plot(kriging_o)<br>
-parameters_o &lt- kriging_o$var_model<br>
-krig_o &lt- kriging_o[[1]]<br>
-krig_o@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') # if needed when use lat lon for Kriging<br>
-r_o &lt- raster(krig_o['var1.pred'])<br>
-r_o_sd &lt- raster(krig_o['var1.stdev'])<br>
-<br>
-dev.new(); plot(r_o);contour(r_o, col='white', add=T)<br>
-# plot(r_o_sd);contour(r_o_sd, col='white', add=T)<br>
-<br>
-# 普遍クリギング Universal kriging<br>
-kriging_u &lt- autoKrige(value~x+y, dat.k, grid, model = c('Sph', 'Exp', 'Gau', 'Lin')) <br>
-dev.new(); plot(kriging_u)<br>
-parameters_u &lt- kriging_u$var_model<br>
-krig_u &lt- kriging_u[[1]]<br>
-krig_u@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') # if needed when use lat lon for Kriging<br>
-r_u &lt- raster(krig_u['var1.pred'])<br>
-r_u_sd &lt- raster(krig_u['var1.stdev'])<br>
-<br>
-dev.new(); plot(r_u);contour(r_u, col='white', add=T)<br>
-# plot(r_u_sd);contour(r_u_sd, col='white', add=T)<br>
-<br>
-<br>
-# クリギング結果の出力 Output result<br>
-# 投影変換<br>
-r_o_ll &lt- projectRaster(r_o, crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')<br>
+# Kriging
+datLL_noref &lt- as.data.frame(df_LL) # use parameters of datLL
+coordinates(datLL_noref) = ~x+y
+dat.k &lt- datLL_noref # no CRS ref
+# When you use dat_LL, use lat lon for kriging (if CRS is set, errors will appered)
+
+# グリッド grid (newdata)
+coord &lt- coordinates(dat.k)
+x.grid &lt- seq(min(coord[,1]), max(coord[,1]), length=100)
+y.grid &lt- seq(min(coord[,2]), max(coord[,2]), length=100)
+xy.grid &lt- expand.grid(x.grid, y.grid)
+vxg &lt- seq(min(coord[,1]), max(coord[,1]), length=nrow(xy.grid))
+vyg &lt- seq(min(coord[,2]), max(coord[,2]), length=nrow(xy.grid))
+grid &lt- as.data.frame(cbind(xy.grid, vxg, vyg))
+colnames(grid) &lt- c('x','y', colnames(grid)[-c(1:2)])
+gridded(grid) = ~x+y
+
+# 普通クリギング　Ordinary kriging
+kriging_o &lt- autoKrige(value~1, dat.k, grid, model = c('Sph', 'Exp', 'Gau', 'Lin')) 
+dev.new(); plot(kriging_o)
+parameters_o &lt- kriging_o$var_model
+krig_o &lt- kriging_o[[1]]
+krig_o@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') # if needed when use lat lon for Kriging
+r_o &lt- raster(krig_o['var1.pred'])
+r_o_sd &lt- raster(krig_o['var1.stdev'])
+
+dev.new(); plot(r_o);contour(r_o, col='white', add=T)
+# plot(r_o_sd);contour(r_o_sd, col='white', add=T)
+
+# 普遍クリギング Universal kriging
+kriging_u &lt- autoKrige(value~x+y, dat.k, grid, model = c('Sph', 'Exp', 'Gau', 'Lin')) 
+dev.new(); plot(kriging_u)
+parameters_u &lt- kriging_u$var_model
+krig_u &lt- kriging_u[[1]]
+krig_u@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs') # if needed when use lat lon for Kriging
+r_u &lt- raster(krig_u['var1.pred'])
+r_u_sd &lt- raster(krig_u['var1.stdev'])
+
+dev.new(); plot(r_u);contour(r_u, col='white', add=T)
+# plot(r_u_sd);contour(r_u_sd, col='white', add=T)
+
+
+# クリギング結果の出力 Output result
+# 投影変換
+r_o_ll &lt- projectRaster(r_o, crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
 r_u_ll &lt- projectRaster(r_u, crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
 </code></pre></div>
 
@@ -441,39 +446,39 @@ r_u_ll &lt- projectRaster(r_u, crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_
 </p>
 
 <div class='codearea'><pre><code>
-# On Leaflet<br>
-dat.k.out &lt- dat.k<br>
-dat.k.out@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')<br>
-TilePos &lt- coordinates(dat.k.out)<br>
-tile_zoomlevel &lt- 1 + 10/vz<br>
-<br>
-pal.o &lt- colorNumeric(c('skyblue', 'white',  'brown'), values(r_o_ll),  na.color = 'transparent')<br>
-pal.u &lt- colorNumeric(c('violet', 'white',  'green'), values(r_u_ll),  na.color = 'transparent')<br>
-pal.t &lt- colorNumeric(c('blue','skyblue', 'white', 'yellow', 'red'), values(tile.raster),  na.color = 'transparent')<br>
-atr_gsi &lt- '&lta href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'&gtGSI-Tiles&lt/a&gt'<br>
-map &lt- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% setView(lng=141.328082,lat=43.068825,zoom=13) %>%<br>
-# add tiles<br>
-addTiles('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', attribution = atr_gsi, group = 'GSI Tiles') %>%<br>
-addTiles(group = 'OpenStreetMap') %>%<br>
-# add original data<br>
-addCircleMarkers(TilePos[,'x'], TilePos[,'y'], group = 'TilePos', color= 'blue', stroke=FALSE, radius = tile_zoomlevel) %>%<br>
-# add kriging results (raster)<br>
-addRasterImage(r_o_ll, colors = pal.o, opacity = 0.5, group = 'OrdKri') %>%<br>
-addLegend(pal = pal.o, values = values(r_o_ll), title = 'size &ltbr&gt [kb] &ltbr&gt Ord', group = 'OrdKri', position='topleft') %>%<br>
-addRasterImage(r_u_ll, colors = pal.u, opacity = 0.5, group = 'UniKri') %>%<br>
-addLegend(pal = pal.u, values = values(r_u_ll), title = 'size &ltbr&gt [kb] &ltbr&gt Uni', group = 'UniKri', position='topleft') %>%<br>
-addRasterImage(tile.raster, colors = pal.t, opacity = 0.5, group = 'TileGrid') %>%<br>
-addLegend(pal = pal.t, values = values(tile.raster), title = 'size &ltbr&gt [kb] &ltbr&gt TileGrid', group = 'TileGrid', position='topleft') %>%<br>
-# set tiles and raster on maps<br>
-addLayersControl(<br>
-baseGroups = c('OpenStreetMap', 'GSI Tiles'),<br>
-overlayGroups = c('TilePos', 'TileGrid', 'OrdKri', 'UniKri'),<br>
-position='topright',<br>
-options=layersControlOptions(collapsed = TRUE)<br>
-) %>%<br>
-# add scale bar<br>
-addScaleBar(position='bottomleft', options=scaleBarOptions(imperial = FALSE))<br>
-<br>
+# On Leaflet
+dat.k.out &lt- dat.k
+dat.k.out@proj4string &lt- CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+TilePos &lt- coordinates(dat.k.out)
+tile_zoomlevel &lt- 1 + 10/vz
+
+pal.o &lt- colorNumeric(c('skyblue', 'white',  'brown'), values(r_o_ll),  na.color = 'transparent')
+pal.u &lt- colorNumeric(c('violet', 'white',  'green'), values(r_u_ll),  na.color = 'transparent')
+pal.t &lt- colorNumeric(c('blue','skyblue', 'white', 'yellow', 'red'), values(tile.raster),  na.color = 'transparent')
+atr_gsi &lt- '&lta href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'&gtGSI-Tiles&lt/a&gt'
+map &lt- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% setView(lng=141.328082,lat=43.068825,zoom=13) %>%
+# add tiles
+addTiles('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', attribution = atr_gsi, group = 'GSI Tiles') %>%
+addTiles(group = 'OpenStreetMap') %>%
+# add original data
+addCircleMarkers(TilePos[,'x'], TilePos[,'y'], group = 'TilePos', color= 'blue', stroke=FALSE, radius = tile_zoomlevel) %>%
+# add kriging results (raster)
+addRasterImage(r_o_ll, colors = pal.o, opacity = 0.5, group = 'OrdKri') %>%
+addLegend(pal = pal.o, values = values(r_o_ll), title = 'size &ltbr&gt [kb] &ltbr&gt Ord', group = 'OrdKri', position='topleft') %>%
+addRasterImage(r_u_ll, colors = pal.u, opacity = 0.5, group = 'UniKri') %>%
+addLegend(pal = pal.u, values = values(r_u_ll), title = 'size &ltbr&gt [kb] &ltbr&gt Uni', group = 'UniKri', position='topleft') %>%
+addRasterImage(tile.raster, colors = pal.t, opacity = 0.5, group = 'TileGrid') %>%
+addLegend(pal = pal.t, values = values(tile.raster), title = 'size &ltbr&gt [kb] &ltbr&gt TileGrid', group = 'TileGrid', position='topleft') %>%
+# set tiles and raster on maps
+addLayersControl(
+baseGroups = c('OpenStreetMap', 'GSI Tiles'),
+overlayGroups = c('TilePos', 'TileGrid', 'OrdKri', 'UniKri'),
+position='topright',
+options=layersControlOptions(collapsed = TRUE)
+) %>%
+# add scale bar
+addScaleBar(position='bottomleft', options=scaleBarOptions(imperial = FALSE))
+
 map
 </code></pre></div>
 

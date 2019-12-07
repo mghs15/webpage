@@ -75,22 +75,22 @@ ndvih_coord &lt- coordinates(ndvih) # 各ポリゴンの代表点を抽出<br>
 <br>
 # 欠損データの作成<br>
 <br>
-na &lt-c(rep(NA, length=10), 1) # 11個中、1つ以外欠損値(NA)に置き換える。<br>
-ndvih_miss &lt- ndvih$mean*rep(na, length=length(ndvih$mean))<br>
-ndvih_x &lt- ndvih_coord[,1]*rep(na, length=length(ndvih_coord[,1]))<br>
-ndvih_y &lt- ndvih_coord[,2]*rep(na, length=length(ndvih_coord[,2]))<br>
-ndvih_miss &lt- ndvih_miss[!is.na(ndvih_miss)] # それぞれ、欠損値を除く<br>
-miss_x &lt- ndvih_x[!is.na(ndvih_x)]<br>
-miss_y &lt- ndvih_y[!is.na(ndvih_y)]<br>
+na &lt-c(rep(NA, length=10), 1) # 11個中、1つ以外欠損値(NA)に置き換える。
+ndvih_miss &lt- ndvih$mean*rep(na, length=length(ndvih$mean))
+ndvih_x &lt- ndvih_coord[,1]*rep(na, length=length(ndvih_coord[,1]))
+ndvih_y &lt- ndvih_coord[,2]*rep(na, length=length(ndvih_coord[,2]))
+ndvih_miss &lt- ndvih_miss[!is.na(ndvih_miss)] # それぞれ、欠損値を除く
+miss_x &lt- ndvih_x[!is.na(ndvih_x)]
+miss_y &lt- ndvih_y[!is.na(ndvih_y)]
 <br>
-ndvi_miss &lt- cbind(miss_x, miss_y, ndvih_miss) # 行列の再構成<br>
-colnames(ndvi_miss) &lt- c("x","y","NDVI") # 列名を付ける<br>
-ndvi_miss &lt- as.data.frame(ndvi_miss) # データフレームに変換<br>
+ndvi_miss &lt- cbind(miss_x, miss_y, ndvih_miss) # 行列の再構成
+colnames(ndvi_miss) &lt- c("x","y","NDVI") # 列名を付ける
+ndvi_miss &lt- as.data.frame(ndvi_miss) # データフレームに変換
 <br>
-# データ形式をSpatialPointsDataFrameに変換する<br>
-coords &lt- cbind(ndvi_miss$x,ndvi_miss$y) # x,y座標をペアにする<br>
-ndvi_miss &lt- SpatialPointsDataFrame(coords,ndvi_miss)<br>
-coord &lt- coordinates(ndvi_miss)<br>
+# データ形式をSpatialPointsDataFrameに変換する
+coords &lt- cbind(ndvi_miss$x,ndvi_miss$y) # x,y座標をペアにする
+ndvi_miss &lt- SpatialPointsDataFrame(coords,ndvi_miss)
+coord &lt- coordinates(ndvi_miss)
 </code></pre></div>
 <div class='fig'>
 <a href='./a2/101.png'><img src='./a2/101.png' class='fig'></a>
@@ -102,10 +102,10 @@ coord &lt- coordinates(ndvi_miss)<br>
 バリオグラムを作って、モデルの検討を行う。
 </p>
 <div class='codearea'><pre><code>
-# バリオグラムを図示(乱数なので、場合によって変わります）<br>
-ndvi_vario &lt- variogram(NDVI~x+y, data=ndvi_miss, cressie=T)<br>
-plot(ndvi_vario,pch=1,cex=1.2) # まず、バリオグラムの様子を確認（下図左）<br>
-# variogram()の引数として、cloud=Tを加えると、バリオグラム雲を表示できる。<br>
+# バリオグラムを図示(乱数なので、場合によって変わります）
+ndvi_vario &lt- variogram(NDVI~x+y, data=ndvi_miss, cressie=T)
+plot(ndvi_vario,pch=1,cex=1.2) # まず、バリオグラムの様子を確認（下図左）
+# variogram()の引数として、cloud=Tを加えると、バリオグラム雲を表示できる。
 </code></pre></div>
 <br>
 <div class='fig'>
@@ -115,37 +115,37 @@ plot(ndvi_vario,pch=1,cex=1.2) # まず、バリオグラムの様子を確認�
 </p></div>
 <p>バリオグラムを見て、見た目からそれっぽいシル、レンジ、ナゲットをまず入力する。</p>
 <div class='codearea'><pre><code>
-# バリオグラムの近似曲線を決定（見た目から、それっぽい初期値を決める）<br>
-my.psill &lt- 0.008 # シル<br>
-my.range &lt- 0.012 # レンジ<br>
-my.nugget &lt- 0.001 # ナゲット<br>
+# バリオグラムの近似曲線を決定（見た目から、それっぽい初期値を決める）
+my.psill &lt- 0.008 # シル
+my.range &lt- 0.012 # レンジ
+my.nugget &lt- 0.001 # ナゲット
 </code></pre></div>
 
 <p>入力したシル、レンジ、ナゲットを初期値として、モデルを作成する。</p>
 <div class='codearea'><pre><code>
-dat.fit &lt- fit.variogram(ndvi_vario, vgm(model="Sph", psill=my.psill, range=my.range, nugget=my.nugget), fit.method=1)<br>
-# モデル(model引数)はいろいろあるから、適宜選ぶ。<br>
-#（Sphは球形モデル、Expは指数モデル、Linは線形モデル、Gauはガウスモデル、Nugはナゲット効果モデル、MatはMaternモデル）<br>
-# fit.method引数は、ググってください。<br>
-<br>
-dat.fit # 結果の表示（いい感じに、シル、レンジ、ナゲットを推定してくれる）<br>
+dat.fit &lt- fit.variogram(ndvi_vario, vgm(model="Sph", psill=my.psill, range=my.range, nugget=my.nugget), fit.method=1)
+# モデル(model引数)はいろいろあるから、適宜選ぶ。
+#（Sphは球形モデル、Expは指数モデル、Linは線形モデル、Gauはガウスモデル、Nugはナゲット効果モデル、MatはMaternモデル）
+# fit.method引数は、ググってください。
+
+dat.fit # 結果の表示（いい感じに、シル、レンジ、ナゲットを推定してくれる）
 </code></pre></div>
 
 <p>dat.fitによる結果の表示（いい感じに、シル、レンジ、ナゲットを推定してくれる）</p>
 <div class='codearea'><pre><code>
-   model       psill      range <br>
-1   Nug 0.000000000 0.00000000 <br>
-2   Sph 0.009432095 0.01966746 <br>
+   model       psill      range 
+1   Nug 0.000000000 0.00000000 
+2   Sph 0.009432095 0.01966746 
 </code></pre></div>
 
 <p>推定したシル、レンジ、ナゲットを使って最終的なモデルとして記録する。</p>
 <div class='codearea'><pre><code>
-f.psill &lt- dat.fit$psill[2] # 推定したシルの取り出し<br>
-f.range &lt- dat.fit$range[2] # 推定したレンジの取り出し<br>
-f.nugget &lt- dat.fit$psill[1] # 推定したナゲットの取り出し<br>
-<br>
-plot(ndvi_vario,dat.fit, pch=20, cex=1.5, col=1) # 下図<br>
-m &lt- vgm(f.psill, "Sph", f.range, f.nugget) # モデルとして記録<br>
+f.psill &lt- dat.fit$psill[2] # 推定したシルの取り出し
+f.range &lt- dat.fit$range[2] # 推定したレンジの取り出し
+f.nugget &lt- dat.fit$psill[1] # 推定したナゲットの取り出し
+
+plot(ndvi_vario,dat.fit, pch=20, cex=1.5, col=1) # 下図
+m &lt- vgm(f.psill, "Sph", f.range, f.nugget) # モデルとして記録
 </code></pre></div>
 
 <div class='fig'>
@@ -156,24 +156,24 @@ m &lt- vgm(f.psill, "Sph", f.range, f.nugget) # モデルとして記録<br>
 
 <p>いよいよモデルを使ってクリギングを行い、内挿図を作成するのだが、まず最初は、クリギングで内挿する部分のグリッドを用意しなくてはならない。</p>
 <div class='codearea'><pre><code>
-# 空間補間の状況を図示するためにグリッド(描画時の升目)を用意<br>
-# ここでは、もともとのデータのグリッドを用いる。<br>
-ndvih_coord &lt- coordinates(ndvih) # 各ポリゴンの代表点を抽出<br>
-# データ型をSpatialPoints型に変換<br>
-dat.grid &lt- SpatialPoints(ndvih_coord, proj4string=CRS(as.character(NA)))<br>
-# データ型をSpatialPixel型に変換（要らないかも？）<br>
-dat.grid &lt- spsample(dat.grid,type="regular")<br>
-gridded(dat.grid) = TRUE # よくわからないが必要<br>
+# 空間補間の状況を図示するためにグリッド(描画時の升目)を用意
+# ここでは、もともとのデータのグリッドを用いる。
+ndvih_coord &lt- coordinates(ndvih) # 各ポリゴンの代表点を抽出
+# データ型をSpatialPoints型に変換
+dat.grid &lt- SpatialPoints(ndvih_coord, proj4string=CRS(as.character(NA)))
+# データ型をSpatialPixel型に変換（要らないかも？）
+dat.grid &lt- spsample(dat.grid,type="regular")
+gridded(dat.grid) = TRUE # よくわからないが必要
 </code></pre></div>
 
 <p>モデルを使ってクリギングを行い、内挿図を作成する。</p>
 <div class='codearea'><pre><code>
-# krige()関数を用いる。元のデータ(ndvi_miss)、バリオグラムの近似モデル(m)、グリッド(dat.grid)を合わせて空間補間を行う。<br>
-spplot(ndvi_miss["NDVI"]) #inputデータの分布図<br>
-# 通常クリギング<br>
-krige &lt- krige(NDVI~1, ndvi_miss, dat.grid, model = m)<br>
-plot(krige["var1.pred"], axes=TRUE) <br>
-contour(krige["var1.pred"], col="white", add=T) # 等値線を引く。<br>
+# krige()関数を用いる。元のデータ(ndvi_miss)、バリオグラムの近似モデル(m)、グリッド(dat.grid)を合わせて空間補間を行う。
+spplot(ndvi_miss["NDVI"]) #inputデータの分布図
+# 通常クリギング
+krige &lt- krige(NDVI~1, ndvi_miss, dat.grid, model = m)
+plot(krige["var1.pred"], axes=TRUE) 
+contour(krige["var1.pred"], col="white", add=T) # 等値線を引く。
 </code></pre></div>
 
 <div class='fig'>
@@ -184,11 +184,11 @@ contour(krige["var1.pred"], col="white", add=T) # 等値線を引く。<br>
 
 <p>クリギング結果は出力可能なので、あとの作業をQGISなどに引き継ぐこともできる。</p>
 <div class='codearea'><pre><code>
-# クリギングデータの出力 <br>
-# ラスタデータとして出力する<br>
-writeRaster(raster(krige["var1.pred"]), "krigeNDVI10.tiff", format="Gtiff") # GeoTiff（拡張子.tif）を指定して出力。<br>
-# format=“ascii”（ESRI Ascii（拡張子.asc））等、ほかの形式も指定できる。<br>
-# Ascii の場合、縦横の解像度はほぼ同一にしておく（メッシュを作る際に注意）。<br>
+# クリギングデータの出力 
+# ラスタデータとして出力する
+writeRaster(raster(krige["var1.pred"]), "krigeNDVI10.tiff", format="Gtiff") # GeoTiff（拡張子.tif）を指定して出力。
+# format=“ascii”（ESRI Ascii（拡張子.asc））等、ほかの形式も指定できる。
+# Ascii の場合、縦横の解像度はほぼ同一にしておく（メッシュを作る際に注意）。
 </code></pre></div>
 
 <div class='fig'>
@@ -199,8 +199,8 @@ ESRI Ascii ラスターデータとして出力したクリギングの結果を
 </p></div>
 
 <div class='codearea'><pre><code>
-#点データとしても出力できる。<br>
-writePointsShape(krige,"krige_NDVI_10.shp") <br>
+#点データとしても出力できる。
+writePointsShape(krige,"krige_NDVI_10.shp") 
 </code></pre></div>
 
 <div class='fig'>
@@ -218,97 +218,97 @@ sample.shpのvalueという値を補間することにしましょう。<br>
 </p>
 
 <div class='codearea'><pre><code>
-### IDW・クリギング手順まとめ ####################################<br>
-library(spdep)<br>
-library(maptools)<br>
-library(gstat)<br>
-library(sp)<br>
-library(raster)<br>
-<br>
-### データの準備 ###<br>
-## 選択肢１：シェープファイルを利用する（例:sample.shp）<br>
-# シェープファイル（ポリゴンまたはポイント）を読み込む。<br>
-shape &lt- readShapePoly(<font color='blue'>"sample.shp"</font>) # ポリゴンの場合 <br>
-shape &lt- readShapePoints(<font color='blue'>"sample.shp"</font>) # ポイントの場合<br>
-plot(shape, axes=T) # ポリゴンの表示<br>
-coord &lt- coordinates(shape) # 各ポリゴン・ポイントの代表点を抽出<br>
-sdata &lt- cbind(coord[,1], coord[,2], shape<font color='blue'>$value</font>) # 行列構成<br>
-<br>
-## 選択肢２：データフレーム(Excelなど)から、座標と測定値データを取得する。<br>
-df &lt- read.table("clipboard", header=TRUE) # サンプリング点データ<br>
-EB &lt- cbind(df[,2], df[,1]) # 経度、緯度の順に取り出し、EBに格納<br>
-sdf &lt- SpatialPointsDataFrame(EB, df) <br>
-coord &lt- coordinates(sdf) # サンプリングポイントの座標<br>
-sdata &lt- cbind(coord[,1], coord[,2], df[,3]) # 行列構成<br>
-<br>
-### 行列データの整理と変換 ###<br>
-colnames(sdata) &lt- c("x","y","value") # 列名を付ける<br>
-sdata &lt- as.data.frame(sdata) # データフレームに変換<br>
-# データ形式をSpatialPointsDataFrameに変換する<br>
-coords &lt- cbind(sdata$x,sdata$y) # x,y座標をペアにする<br>
-sdata &lt- SpatialPointsDataFrame(coords, sdata)<br>
-<br>
-### 予測グリッドの作成 ###<br>
-p &lt- (max(coord[,1])-min(coord[,1]))/(max(coord[,2])-min(coord[,2]))<br>
-p # 縦横比を出力。だいたい、縦横比が同じになるように調整する。<br>
-# 上の縦横比に合わせて、引数lengthの大きさを変更する。<br>
-x.grid &lt- seq(min(coord[,1]), max(coord[,1]), length=50)<br>
-y.grid &lt- seq(min(coord[,2]), max(coord[,2]), length=50)<br>
-loc &lt- expand.grid(x.grid, y.grid)<br>
-colnames(loc) &lt- c(“x.grid”, “y.grid”)<br>
-# メッシュのデータ型をSpatialPoints型に変換<br>
-loc &lt- SpatialPoints(loc, proj4string=CRS(as.character(NA)))<br>
-# メッシュのデータ型をSpatialPixel型に変換<br>
-loc &lt- as(loc, “SpatialPixelDataFrame”)<br>
-gridded(loc) = TRUE<br>
-<br>
-<br>
-### バリオグラムの近似曲線を決定###<br>
-vario &lt- variogram(value~x+y, data=sdata, cressie=T)<br>
-plot(vario,pch=1,cex=1.2) # バリオグラムの様子を確認<br>
-<br>
-my.psill &lt- 200  <br># シル（バリオグラムの見た目から、それっぽい初期値を決める）<br>
-my.range &lt- 0.03  <br># レンジ（バリオグラムの見た目から、それっぽい初期値を決める）<br>
-my.nugget &lt- 0  <br># ナゲット（バリオグラムの見た目から、それっぽい初期値を決める）<br>
-<br>
-dat.fit &lt- fit.variogram(vario, vgm(model=<font color='blue'>"Sph"</font>, psill=my.psill, range=my.range, nugget=my.nugget), fit.method=1)<br>
-# モデル(model引数)はいろいろあるから、適宜選ぶ <br>
-   # Sphは球形モデル、Expは指数モデル、<br>
-   # Gauはガウスモデル、Linは線形モデル、<br>
-   # Nugはナゲット効果モデル、MatはMaternモデル<br>
-# fit.method引数は、ググってください。（自分はよくわかってない。）<br>
-dat.fit # 結果の表示（シル、レンジ、ナゲットを推定してくれる）<br>
-plot(vario, dat.fit, pch=20, cex=1.5, col=1) # バリオグラム表示<br>
-f.psill &lt- dat.fit$psill[2] # 推定したシルの取り出し<br>
-f.range &lt- dat.fit$range[2] # 推定したレンジの取り出し<br>
-f.nugget &lt- dat.fit$psill[1] # 推定したナゲットの取り出し<br>
-m &lt- vgm(f.psill, "Sph", f.range, f.nugget) # モデルとして記録<br>
-<br>
-### クリギング補間###<br>
-# 通常クリギング（グリッドが細かい、データ数が多いと遅くなるので注意）<br>
-gs &lt- gstat(id="value", formula=value~1, data=sdata, model=m)<br>
-krige1 &lt- predict(gs, loc)<br>
-plot(krige1[1], axes=T)<br>
-contour(krige1[1], col="white", add=T)<br>
-<br>
-### クリギング結果の出力###<br>
-writeRaster(raster(krige1[1]), "krig_pred.tiff", format="GTiff") # GeoTiff（拡張子.tif）で予測値を出力。<br>
-# 引数にoverwrite=TRUEを加えると、上書きできる。<br>
-# GeoTiffでうまく出力できないときは、format="ascii"として、<br>
-# ESRI Ascii（拡張子.asc）で出力。その場合、縦横の解像度はほぼ同じに。<br>
-<br>
-<br>
-### IDW (逆距離過重補完)###<br>
-data_idw &lt- as.data.frame(sdata) # ただのデータフレームにする<br>
-IDW &lt- idw(value~1, locations=~x+y, data=data_idw, loc, idp=2)<br>
-plot(IDW, axes=T)<br>
-contour(IDW["var1.pred"], col="white", add=T)<br>
-<br>
-### おわり ######################################################<br>
+### IDW・クリギング手順まとめ ####################################
+library(spdep)
+library(maptools)
+library(gstat)
+library(sp)
+library(raster)
+
+### データの準備 ###
+## 選択肢１：シェープファイルを利用する（例:sample.shp）
+# シェープファイル（ポリゴンまたはポイント）を読み込む。
+shape &lt- readShapePoly(<font color='blue'>"sample.shp"</font>) # ポリゴンの場合 
+shape &lt- readShapePoints(<font color='blue'>"sample.shp"</font>) # ポイントの場合
+plot(shape, axes=T) # ポリゴンの表示
+coord &lt- coordinates(shape) # 各ポリゴン・ポイントの代表点を抽出
+sdata &lt- cbind(coord[,1], coord[,2], shape<font color='blue'>$value</font>) # 行列構成
+
+## 選択肢２：データフレーム(Excelなど)から、座標と測定値データを取得する。
+df &lt- read.table("clipboard", header=TRUE) # サンプリング点データ
+EB &lt- cbind(df[,2], df[,1]) # 経度、緯度の順に取り出し、EBに格納
+sdf &lt- SpatialPointsDataFrame(EB, df) 
+coord &lt- coordinates(sdf) # サンプリングポイントの座標
+sdata &lt- cbind(coord[,1], coord[,2], df[,3]) # 行列構成
+
+### 行列データの整理と変換 ###
+colnames(sdata) &lt- c("x","y","value") # 列名を付ける
+sdata &lt- as.data.frame(sdata) # データフレームに変換
+# データ形式をSpatialPointsDataFrameに変換する
+coords &lt- cbind(sdata$x,sdata$y) # x,y座標をペアにする
+sdata &lt- SpatialPointsDataFrame(coords, sdata)
+
+### 予測グリッドの作成 ###
+p &lt- (max(coord[,1])-min(coord[,1]))/(max(coord[,2])-min(coord[,2]))
+p # 縦横比を出力。だいたい、縦横比が同じになるように調整する。
+# 上の縦横比に合わせて、引数lengthの大きさを変更する。
+x.grid &lt- seq(min(coord[,1]), max(coord[,1]), length=50)
+y.grid &lt- seq(min(coord[,2]), max(coord[,2]), length=50)
+loc &lt- expand.grid(x.grid, y.grid)
+colnames(loc) &lt- c(“x.grid”, “y.grid”)
+# メッシュのデータ型をSpatialPoints型に変換
+loc &lt- SpatialPoints(loc, proj4string=CRS(as.character(NA)))
+# メッシュのデータ型をSpatialPixel型に変換
+loc &lt- as(loc, “SpatialPixelDataFrame”)
+gridded(loc) = TRUE
+
+
+### バリオグラムの近似曲線を決定###
+vario &lt- variogram(value~x+y, data=sdata, cressie=T)
+plot(vario,pch=1,cex=1.2) # バリオグラムの様子を確認
+
+my.psill &lt- 200  # シル（バリオグラムの見た目から、それっぽい初期値を決める）
+my.range &lt- 0.03  # レンジ（バリオグラムの見た目から、それっぽい初期値を決める）
+my.nugget &lt- 0  # ナゲット（バリオグラムの見た目から、それっぽい初期値を決める）
+
+dat.fit &lt- fit.variogram(vario, vgm(model=<font color='blue'>"Sph"</font>, psill=my.psill, range=my.range, nugget=my.nugget), fit.method=1)
+# モデル(model引数)はいろいろあるから、適宜選ぶ 
+   # Sphは球形モデル、Expは指数モデル、
+   # Gauはガウスモデル、Linは線形モデル、
+   # Nugはナゲット効果モデル、MatはMaternモデル
+# fit.method引数は、ググってください。（自分はよくわかってない。）
+dat.fit # 結果の表示（シル、レンジ、ナゲットを推定してくれる）
+plot(vario, dat.fit, pch=20, cex=1.5, col=1) # バリオグラム表示
+f.psill &lt- dat.fit$psill[2] # 推定したシルの取り出し
+f.range &lt- dat.fit$range[2] # 推定したレンジの取り出し
+f.nugget &lt- dat.fit$psill[1] # 推定したナゲットの取り出し
+m &lt- vgm(f.psill, "Sph", f.range, f.nugget) # モデルとして記録
+
+### クリギング補間###
+# 通常クリギング（グリッドが細かい、データ数が多いと遅くなるので注意）
+gs &lt- gstat(id="value", formula=value~1, data=sdata, model=m)
+krige1 &lt- predict(gs, loc)
+plot(krige1[1], axes=T)
+contour(krige1[1], col="white", add=T)
+
+### クリギング結果の出力###
+writeRaster(raster(krige1[1]), "krig_pred.tiff", format="GTiff") # GeoTiff（拡張子.tif）で予測値を出力。
+# 引数にoverwrite=TRUEを加えると、上書きできる。
+# GeoTiffでうまく出力できないときは、format="ascii"として、
+# ESRI Ascii（拡張子.asc）で出力。その場合、縦横の解像度はほぼ同じに。
+
+
+### IDW (逆距離過重補完)###
+data_idw &lt- as.data.frame(sdata) # ただのデータフレームにする
+IDW &lt- idw(value~1, locations=~x+y, data=data_idw, loc, idp=2)
+plot(IDW, axes=T)
+contour(IDW["var1.pred"], col="white", add=T)
+
+### おわり ######################################################
 </code></pre></div>
 <h3>補足</h3>
 <p>
-このコードは昔書いた遺物なんだけど、利用価値を高めるために公開してみた。<br>
+このコードは昔書いた遺物なんだけど、利用価値を高めるために公開してみた。
 けど、ここでHTML書いて公開するより、GitHub本家にコード上げれば済むと言う話でもある（もうすでに上げてある）。このHTMLファイルを作るのにそれなりの時間をかけたけど、
 見る人はいないだろうし、忘備録的に残すのであれば、GitHubにコードを載せて、そのコードにしっかりコメントを書いておくことで十分な気がする。<br>
 結局、どのツールをどのように有効活用すればいいのかよくわかっていないんだよなぁ。
