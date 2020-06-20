@@ -21,12 +21,12 @@ Rを用いて、クリギングによる補間処理を行う手法をまとめ�
 <h3>R codes</h3>
 <p>必要なライブラリは以下の通り</p>
 <div class='codearea'><pre><code>
-# 必要なライブラリ <br>
-library(spdep)<br>
-library(maptools)<br>
-library(gstat)<br>
-library(sp)<br>
-library(raster)<br>
+# 必要なライブラリ 
+library(spdep)
+library(maptools)
+library(gstat)
+library(sp)
+library(raster)
 </code></pre></div>
 
 <p>
@@ -37,14 +37,14 @@ https://landsat.usgs.gov/landsat-level-1-standard-data-products
 </p>
 
 <div class='codearea'><pre><code>
-# シェープファイルの読み込み・表示<br>
-ndvih &lt- readShapePoly("NDVImesh16-0707.shp")<br>
-# シェープファイル（ポリゴン）を読み込む。<br>
-summary(ndvih)<br>
-plot(ndvih, axes=T, col = gray(1-ndvih$mean/max(ndvih$mean))) <br>
-# NDVIデータの表示（グレースケール）<br>
-<br>
-ndvih_coord &lt- coordinates(ndvih) # 各ポリゴンの代表点を抽出<br>
+# シェープファイルの読み込み・表示
+ndvih &lt- readShapePoly("NDVImesh16-0707.shp")
+# シェープファイル（ポリゴン）を読み込む。
+summary(ndvih)
+plot(ndvih, axes=T, col = gray(1-ndvih$mean/max(ndvih$mean))) 
+# NDVIデータの表示（グレースケール）
+
+ndvih_coord &lt- coordinates(ndvih) # 各ポリゴンの代表点を抽出
 </code></pre></div>
 
 <div class='fig'>
@@ -58,10 +58,10 @@ ndvih_coord &lt- coordinates(ndvih) # 各ポリゴンの代表点を抽出<br>
 内挿が目的なので、上記データを間引いて、テスト用のデータとする。この間引いたデータを使って内挿図の作成を試みる。
 </p>
 <div class='codearea'><pre><code>
-# クリギング用に上記メッシュデータを間引いて、どのくらい補間を再現できるか検討する<br>
-<br>
-# 欠損データの作成<br>
-<br>
+# クリギング用に上記メッシュデータを間引いて、どのくらい補間を再現できるか検討する
+
+# 欠損データの作成
+
 na &lt-c(rep(NA, length=10), 1) # 11個中、1つ以外欠損値(NA)に置き換える。
 ndvih_miss &lt- ndvih$mean*rep(na, length=length(ndvih$mean))
 ndvih_x &lt- ndvih_coord[,1]*rep(na, length=length(ndvih_coord[,1]))
@@ -69,11 +69,11 @@ ndvih_y &lt- ndvih_coord[,2]*rep(na, length=length(ndvih_coord[,2]))
 ndvih_miss &lt- ndvih_miss[!is.na(ndvih_miss)] # それぞれ、欠損値を除く
 miss_x &lt- ndvih_x[!is.na(ndvih_x)]
 miss_y &lt- ndvih_y[!is.na(ndvih_y)]
-<br>
+
 ndvi_miss &lt- cbind(miss_x, miss_y, ndvih_miss) # 行列の再構成
 colnames(ndvi_miss) &lt- c("x","y","NDVI") # 列名を付ける
 ndvi_miss &lt- as.data.frame(ndvi_miss) # データフレームに変換
-<br>
+
 # データ形式をSpatialPointsDataFrameに変換する
 coords &lt- cbind(ndvi_miss$x,ndvi_miss$y) # x,y座標をペアにする
 ndvi_miss &lt- SpatialPointsDataFrame(coords,ndvi_miss)
@@ -94,7 +94,7 @@ ndvi_vario &lt- variogram(NDVI~x+y, data=ndvi_miss, cressie=T)
 plot(ndvi_vario,pch=1,cex=1.2) # まず、バリオグラムの様子を確認（下図左）
 # variogram()の引数として、cloud=Tを加えると、バリオグラム雲を表示できる。
 </code></pre></div>
-<br>
+
 <div class='fig'>
 <a href='./a2/2.png'><img src='./a2/2.png' class='fig'></a>
 <p class='legend'>
